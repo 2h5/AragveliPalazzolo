@@ -46,15 +46,15 @@
       num: '01',
       name: 'Uptown Coffee Co.',
       category: 'Maywood, NJ',
-      url: 'https://kimi-uptown.lachedon.workers.dev/',
-      domain: 'kimi-uptown.lachedon.workers.dev'
+      url: 'https://uptown-coffee-demo.pages.dev/',
+      domain: 'uptown-coffee-demo.pages.dev'
     },
     {
       num: '02',
       name: 'The Blend Factory',
       category: 'Brooklyn, NY',
-      url: 'https://blendfactory.lachedon.workers.dev/',
-      domain: 'blendfactory.lachedon.workers.dev'
+      url: 'https://theblendfactory-demo.pages.dev/',
+      domain: 'theblendfactory-demo.pages.dev'
     },
     {
       num: '03',
