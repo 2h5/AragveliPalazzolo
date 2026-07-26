@@ -1,771 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aragveli Palazzolo LLC — Nicotine Vending for Bars &amp; Nightlife</title>
-<meta name="description" content="Fully managed nicotine vending machines for NYC bars and nightlife venues. Zero upfront cost, fully licensed and compliant, passive revenue with no work required from your staff.">
-<link rel="canonical" href="https://aragvelipalazzolo.com/">
-<link rel="icon" type="image/png" href="logo-mark.png">
-<link rel="apple-touch-icon" href="logo-mark.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AragveliPalazzolo — Web Design</title>
+<meta name="description" content="AragveliPalazzolo — two college grads building affordable websites for local shops and businesses." />
 
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://aragvelipalazzolo.com/">
-<meta property="og:title" content="Aragveli Palazzolo LLC — Nicotine Vending for Bars &amp; Nightlife">
-<meta property="og:description" content="Fully managed nicotine vending machines for NYC bars and nightlife venues. Zero upfront cost, fully licensed and compliant, passive revenue with no work required from your staff.">
-<meta property="og:image" content="https://aragvelipalazzolo.com/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" rel="stylesheet" />
 
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Aragveli Palazzolo LLC — Nicotine Vending for Bars &amp; Nightlife">
-<meta name="twitter:description" content="Fully managed nicotine vending machines for NYC bars and nightlife venues. Zero upfront cost, fully licensed and compliant, passive revenue with no work required from your staff.">
-<meta name="twitter:image" content="https://aragvelipalazzolo.com/logo-mark.png">
-<style>
-  :root{
-    --ink:        #0E0D0C;
-    --charcoal:   #1B1917;
-    --charcoal-2: #242220;
-    --bone:       #EFEAE0;
-    --bone-dim:   #E3DDCF;
-    --brass:      #C29455;
-    --brass-lt:   #E4C078;
-    --teal:       #6FCFC4;
-    --teal-dim:   #4FA69C;
-    --line:       rgba(194,148,85,0.25);
-    --serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-    --sans:  "Jost", "Futura", "Century Gothic", sans-serif;
-    --mono:  "JetBrains Mono", "Courier New", monospace;
-  }
-
-  @font-face{
-    font-family:"Cormorant Garamond";
-    src: local("Cormorant Garamond");
-  }
-
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{
-    margin:0;
-    background:var(--bone);
-    color:var(--ink);
-    font-family:var(--sans);
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  img{ max-width:100%; height:auto; display:block; }
-  a{ color:inherit; }
-
-  .wrap{
-    width:100%;
-    max-width:1180px;
-    margin:0 auto;
-    padding-left:clamp(20px,5vw,64px);
-    padding-right:clamp(20px,5vw,64px);
-  }
-
-  /* ---------- HEADER / HERO ---------- */
-  .hero{
-    position:relative;
-    background:
-      radial-gradient(ellipse 80% 60% at 78% 20%, rgba(194,148,85,0.16), transparent 60%),
-      linear-gradient(180deg, var(--ink) 0%, var(--charcoal) 55%, var(--charcoal-2) 100%);
-    color:var(--bone);
-    overflow:hidden;
-  }
-  .hero::before{
-    content:"";
-    position:absolute; inset:0;
-    background-image:
-      repeating-linear-gradient(115deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 68px);
-    pointer-events:none;
-  }
-
-  .topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding-top:clamp(20px,4vw,34px);
-    padding-bottom:clamp(14px,3vw,20px);
-    border-bottom:1px solid rgba(194,148,85,0.22);
-    flex-wrap:wrap;
-    gap:14px;
-    position:relative;
-    z-index:2;
-  }
-
-  .monogram{
-    display:flex;
-    align-items:center;
-    gap:14px;
-  }
-  .monogram img{ width:44px; height:44px; flex:none; display:block; }
-  .monogram .word{
-    font-family:var(--sans);
-    font-size:11px;
-    letter-spacing:0.28em;
-    line-height:1.5;
-    color:var(--bone-dim);
-  }
-  .monogram .word b{
-    display:block;
-    font-family:var(--serif);
-    font-weight:600;
-    font-size:15px;
-    letter-spacing:0.14em;
-    color:var(--bone);
-  }
-
-  .topbar-contact{
-    display:flex;
-    gap:clamp(14px,3vw,30px);
-    font-size:13px;
-    letter-spacing:0.02em;
-    color:var(--bone-dim);
-    flex-wrap:wrap;
-  }
-  .topbar-contact a{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    text-decoration:none;
-    color:inherit;
-    transition:color .2s ease;
-  }
-  .topbar-contact a:hover{ color:var(--brass-lt); }
-  .topbar-contact svg{ width:15px; height:15px; opacity:.85; flex:none; }
-
-  .hero-body{
-    position:relative;
-    z-index:2;
-    display:grid;
-    grid-template-columns:1.15fr 0.85fr;
-    align-items:center;
-    gap:clamp(28px,5vw,40px);
-    padding-top:clamp(48px,7vw,86px);
-    padding-bottom:clamp(56px,8vw,96px);
-  }
-
-  .eyebrow{
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:0.24em;
-    text-transform:uppercase;
-    color:var(--teal);
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:22px;
-  }
-  .eyebrow::before{
-    content:"";
-    width:7px; height:7px;
-    border-radius:50%;
-    background:var(--teal);
-    box-shadow:0 0 0 0 rgba(111,207,196,.5);
-    animation:pulse 2.4s infinite;
-  }
-  @keyframes pulse{
-    0%{ box-shadow:0 0 0 0 rgba(111,207,196,.45); }
-    70%{ box-shadow:0 0 0 9px rgba(111,207,196,0); }
-    100%{ box-shadow:0 0 0 0 rgba(111,207,196,0); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .eyebrow::before{ animation:none; }
-  }
-
-  h1{
-    font-family:var(--serif);
-    font-weight:600;
-    font-size:clamp(38px,5.6vw,64px);
-    line-height:1.04;
-    letter-spacing:-0.01em;
-    margin:0 0 26px;
-  }
-  h1 em{
-    font-style:normal;
-    color:var(--brass-lt);
-  }
-
-  .hero p.lede{
-    font-size:clamp(16px,1.6vw,18px);
-    line-height:1.65;
-    color:var(--bone-dim);
-    max-width:46ch;
-    margin:0 0 34px;
-  }
-
-  .cta-row{
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-  }
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:15px 26px;
-    font-family:var(--sans);
-    font-size:13.5px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    text-decoration:none;
-    border-radius:2px;
-    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
-    white-space:nowrap;
-  }
-  .btn-primary{
-    background:var(--brass);
-    color:var(--ink);
-    font-weight:600;
-    box-shadow:0 8px 24px rgba(194,148,85,0.25);
-  }
-  .btn-primary:hover{ background:var(--brass-lt); transform:translateY(-2px); }
-  .btn-ghost{
-    border:1px solid rgba(239,234,224,0.35);
-    color:var(--bone);
-  }
-  .btn-ghost:hover{ border-color:var(--brass-lt); color:var(--brass-lt); transform:translateY(-2px); }
-
-  /* kiosk portrait */
-  .kiosk-frame{
-    position:relative;
-    justify-self:center;
-    width:100%;
-    max-width:340px;
-  }
-  .kiosk-glow{
-    position:absolute;
-    inset:-30px -10px;
-    background:radial-gradient(ellipse 70% 65% at 55% 35%, rgba(111,207,196,0.16), transparent 70%);
-    filter:blur(4px);
-    z-index:0;
-  }
-  .kiosk-frame img{
-    position:relative;
-    z-index:1;
-    border-radius:10px;
-    box-shadow:
-      0 30px 60px -20px rgba(0,0,0,0.65),
-      0 0 0 1px rgba(194,148,85,0.25);
-  }
-  .kiosk-tag{
-    position:absolute;
-    z-index:2;
-    left:50%;
-    bottom:-18px;
-    transform:translateX(-50%);
-    background:var(--ink);
-    border:1px solid var(--line);
-    color:var(--bone-dim);
-    font-family:var(--mono);
-    font-size:10.5px;
-    letter-spacing:0.14em;
-    padding:8px 16px;
-    border-radius:999px;
-    white-space:nowrap;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .kiosk-tag i{
-    width:6px; height:6px; border-radius:50%;
-    background:var(--teal);
-    box-shadow:0 0 8px var(--teal);
-  }
-
-  @media (max-width: 860px){
-    .hero-body{ grid-template-columns:1fr; }
-    .kiosk-frame{ order:-1; max-width:250px; margin-bottom:20px;}
-    .topbar-contact{ display:none; }
-    .cta-row{ justify-content:flex-start; }
-  }
-
-  /* ---------- MARQUEE STRIP ---------- */
-  .strip{
-    background:var(--charcoal-2);
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-    overflow:hidden;
-    padding:13px 0;
-  }
-  .strip-track{
-    display:flex;
-    width:max-content;
-    gap:48px;
-    animation:scroll-left 26s linear infinite;
-    font-family:var(--mono);
-    font-size:12px;
-    letter-spacing:0.2em;
-    text-transform:uppercase;
-    color:var(--brass-lt);
-  }
-  .strip-track span{ display:flex; align-items:center; gap:48px; }
-  .strip-track b{ color:var(--teal); font-weight:400; }
-  @keyframes scroll-left{
-    from{ transform:translateX(0); }
-    to{ transform:translateX(-50%); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .strip-track{ animation:none; }
-  }
-
-  /* ---------- SECTION SHARED ---------- */
-  section{ padding:clamp(56px,8vw,100px) 0; }
-  .section-head{
-    max-width:640px;
-    margin-bottom:clamp(36px,5vw,56px);
-  }
-  .kicker{
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:0.24em;
-    text-transform:uppercase;
-    color:var(--teal-dim);
-    margin-bottom:14px;
-    display:block;
-  }
-  h2{
-    font-family:var(--serif);
-    font-weight:600;
-    font-size:clamp(28px,3.4vw,40px);
-    line-height:1.1;
-    margin:0;
-    color:var(--ink);
-  }
-
-  /* ---------- WHAT YOU GET ---------- */
-  .get-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-  }
-  .get-cell{
-    background:var(--bone);
-    padding:34px 26px;
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-  }
-  .get-icon{
-    width:52px; height:52px;
-    border-radius:50%;
-    background:var(--ink);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex:none;
-  }
-  .get-icon svg{ width:24px; height:24px; stroke:var(--brass-lt); }
-  .get-cell p{
-    margin:0;
-    font-size:15px;
-    line-height:1.5;
-    color:var(--charcoal);
-  }
-  @media (max-width: 900px){
-    .get-grid{ grid-template-columns:repeat(2,1fr); }
-  }
-  @media (max-width: 540px){
-    .get-grid{ grid-template-columns:1fr; }
-  }
-
-  /* ---------- FEATURE ROWS (flexibility / compliant) ---------- */
-  .feature-row{
-    display:grid;
-    grid-template-columns:auto 1fr;
-    gap:28px;
-    padding:36px 0;
-    border-top:1px solid var(--line);
-  }
-  .feature-row:last-child{ border-bottom:1px solid var(--line); }
-  .feature-icon{
-    width:54px; height:54px;
-    border-radius:50%;
-    border:1.5px solid var(--brass);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex:none;
-  }
-  .feature-icon svg{ width:24px; height:24px; stroke:var(--brass); }
-  .feature-row h3{
-    font-family:var(--serif);
-    font-size:22px;
-    font-weight:600;
-    letter-spacing:0.03em;
-    text-transform:uppercase;
-    margin:6px 0 12px;
-    color:var(--ink);
-  }
-  .feature-row p{
-    margin:0 0 10px;
-    font-size:15.5px;
-    line-height:1.68;
-    color:var(--charcoal);
-    max-width:62ch;
-  }
-  .feature-row p:last-child{ margin-bottom:0; }
-  @media (max-width:560px){
-    .feature-row{ grid-template-columns:1fr; }
-  }
-
-  /* ---------- STATS PANEL ---------- */
-  .panel-dark{
-    background:var(--ink);
-    color:var(--bone);
-    position:relative;
-    overflow:hidden;
-  }
-  .panel-dark::before{
-    content:"";
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse 60% 50% at 15% 100%, rgba(194,148,85,0.14), transparent 60%);
-  }
-  .stat-grid{
-    position:relative;
-    z-index:1;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:clamp(24px,4vw,40px);
-  }
-  .stat{
-    border-left:1px solid var(--line);
-    padding-left:22px;
-  }
-  .stat .n{
-    font-family:var(--serif);
-    font-size:clamp(32px,4vw,48px);
-    color:var(--brass-lt);
-    line-height:1;
-    margin-bottom:10px;
-  }
-  .stat .d{
-    font-size:14px;
-    line-height:1.55;
-    color:var(--bone-dim);
-    max-width:26ch;
-  }
-  @media (max-width:700px){
-    .stat-grid{ grid-template-columns:1fr; gap:28px;}
-    .stat{ border-left:none; border-top:1px solid var(--line); padding-left:0; padding-top:18px; }
-  }
-
-  /* ---------- CTA BAND ---------- */
-  .cta-band{
-    background:var(--brass);
-    color:var(--ink);
-  }
-  .cta-band .wrap{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:24px;
-    padding-top:44px;
-    padding-bottom:44px;
-    flex-wrap:wrap;
-  }
-  .cta-band h3{
-    font-family:var(--serif);
-    font-weight:600;
-    font-size:clamp(22px,2.6vw,30px);
-    margin:0;
-    max-width:20ch;
-  }
-  .cta-band .btn-primary{
-    background:var(--ink);
-    color:var(--bone);
-    box-shadow:none;
-  }
-  .cta-band .btn-primary:hover{ background:var(--charcoal-2); }
-
-  /* ---------- FOOTER ---------- */
-  footer{
-    background:var(--charcoal);
-    color:var(--bone-dim);
-    border-top:1px solid var(--line);
-  }
-  .foot-wrap{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
-    padding-top:26px;
-    padding-bottom:26px;
-    flex-wrap:wrap;
-    font-size:13.5px;
-  }
-  .foot-links{
-    display:flex;
-    gap:clamp(16px,3vw,32px);
-    flex-wrap:wrap;
-  }
-  .foot-links a{
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:9px;
-    transition:color .2s ease;
-  }
-  .foot-links a:hover{ color:var(--brass-lt); }
-  .foot-links svg{ width:15px; height:15px; opacity:.8; }
-  .foot-fine{ color:#8a8578; font-size:12px; }
-
-  :focus-visible{
-    outline:2px solid var(--teal);
-    outline-offset:3px;
-  }
-
-  /* ---------- SCROLL REVEAL ---------- */
-  .reveal{
-    opacity:0;
-    transform:translateY(22px);
-    transition:opacity .8s cubic-bezier(.16,.8,.4,1), transform .8s cubic-bezier(.16,.8,.4,1);
-    transition-delay:var(--reveal-delay,0ms);
-  }
-  .reveal.is-visible{
-    opacity:1;
-    transform:translateY(0);
-  }
-  @media (prefers-reduced-motion: reduce){
-    .reveal{ opacity:1; transform:none; transition:none; }
-  }
-</style>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="topbar">
-      <div class="monogram">
-        <img src="logo-mark.png" alt="">
-        <div class="word">ARAGVELI PALAZZOLO<b>LLC</b></div>
-      </div>
-      <div class="topbar-contact">
-        <a href="tel:3478379427"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 347-837-9427</a>
-        <a href="mailto:AragveliPalazzolo@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg> AragveliPalazzolo@gmail.com</a>
+<main class="page">
+
+  <!-- ============ 1. HERO ============ -->
+  <section class="hero" id="top">
+
+    <video class="hero-video" autoplay loop muted playsinline
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_105406_16f4600d-7a92-4292-b96e-b19156c7830a.mp4"></video>
+    <div class="hero-video-overlay"></div>
+
+    <nav class="navbar liquid-glass" data-fade data-delay="0" data-y="-20">
+      <a href="#about">About</a>
+      <a href="#services">Price</a>
+      <a href="#projects">Projects</a>
+      <a href="mailto:AragveliPalazzolo@gmail.com">Contact</a>
+    </nav>
+
+    <div class="hero-heading-wrap" data-fade data-delay="0.15" data-y="40">
+      <h1 class="hero-heading">
+        <span class="hero-heading-line">Look pro.</span>
+        <span class="hero-heading-line hero-heading-shiny">Pay less.</span>
+      </h1>
+    </div>
+
+    <div class="hero-bottom">
+      <p class="hero-tagline" data-fade data-delay="0.35" data-y="20">
+        two college grads building affordable websites for local shops and businesses
+      </p>
+      <div data-fade data-delay="0.5" data-y="20">
+        <a class="btn-hero-cta" href="mailto:AragveliPalazzolo@gmail.com">
+          Contact Us
+          <span class="btn-hero-arrow" aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
 
-    <div class="hero-body">
-      <div>
-        <div class="eyebrow">NYC Licensed Tobacco &amp; E-Cigarette Retail Dealer</div>
-        <h1>Nicotine vending<br>solutions for<br><em>bars &amp; nightlife</em></h1>
-        <p class="lede">Generate passive revenue for your venue with a fully managed nicotine vending machine. We handle installation, stocking, and every restock after — your staff never touches it.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="tel:3478379427">Call 347-837-9427</a>
-          <a class="btn btn-primary" href="mailto:AragveliPalazzolo@gmail.com">Email Us</a>
-          <a class="btn btn-ghost" href="#compliant">See how it works</a>
+  </section>
+
+  <!-- ============ 2. MARQUEE ============ -->
+  <section class="marquee" id="marquee">
+    <div class="marquee-row" data-marquee-row="1"><div class="marquee-track"></div></div>
+    <div class="marquee-row" data-marquee-row="2"><div class="marquee-track"></div></div>
+  </section>
+
+  <!-- ============ 3. ABOUT ============ -->
+  <section class="about" id="about">
+
+    <img class="deco deco-tl"
+      data-fade data-delay="0.1" data-x="-80" data-y="0" data-duration="0.9"
+      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
+      alt="" aria-hidden="true" />
+    <img class="deco deco-bl"
+      data-fade data-delay="0.25" data-x="-80" data-y="0" data-duration="0.9"
+      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
+      alt="" aria-hidden="true" />
+    <img class="deco deco-tr"
+      data-fade data-delay="0.15" data-x="80" data-y="0" data-duration="0.9"
+      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
+      alt="" aria-hidden="true" />
+    <img class="deco deco-br"
+      data-fade data-delay="0.3" data-x="80" data-y="0" data-duration="0.9"
+      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
+      alt="" aria-hidden="true" />
+
+    <div class="about-inner">
+      <h2 class="hero-heading about-heading" data-fade data-delay="0" data-y="40">About us</h2>
+
+      <p class="about-text" data-animated-text>We&rsquo;re two college grads who taught ourselves web design so local shops and small businesses could get sites that actually look good, without agency prices. We handle the design and the build, so you can just tell us what you need and get back to running your business.</p>
+    </div>
+
+    <div data-fade data-delay="0.2" data-y="20">
+      <a class="btn-contact" href="mailto:AragveliPalazzolo@gmail.com">Contact Us</a>
+    </div>
+
+  </section>
+
+  <!-- ============ 4. SERVICES ============ -->
+  <section class="services" id="services">
+    <h2 class="services-heading">Services</h2>
+
+    <div class="services-list">
+
+      <div class="service-item" data-fade data-delay="0">
+        <div class="service-body">
+          <h3 class="service-name">Website Design</h3>
+          <p class="service-desc">Clean, modern designs built around your business and your customers, not a generic template.</p>
         </div>
       </div>
 
-      <div class="kiosk-frame">
-        <div class="kiosk-glow"></div>
-        <img src="kiosk.jpg" width="469" height="660" loading="eager" decoding="async" alt="Freestanding nicotine vending kiosk with touchscreen product menu">
-        <div class="kiosk-tag"><i></i>Live inventory, tap to pay</div>
+      <div class="service-item" data-fade data-delay="0.1">
+        <div class="service-body">
+          <h3 class="service-name">Website Development</h3>
+          <p class="service-desc">Fast, mobile-friendly sites built from scratch and ready to go live.</p>
+        </div>
       </div>
+
+      <div class="service-item" data-fade data-delay="0.2">
+        <div class="service-body">
+          <h3 class="service-name">Ongoing Support</h3>
+          <p class="service-desc">Updates and changes whenever you need them &mdash; no extra hassle.</p>
+        </div>
+      </div>
+
     </div>
-  </div>
-</header>
+  </section>
 
-<div class="strip" aria-hidden="true">
-  <div class="strip-track">
-    <span>Fully licensed in NYC <b>·</b> Always restocked by us <b>·</b> Passive revenue share <b>·</b></span>
-    <span>Fully licensed in NYC <b>·</b> Always restocked by us <b>·</b> Passive revenue share <b>·</b></span>
-  </div>
-</div>
+  <!-- ============ 5. PROJECTS ============ -->
+  <section class="projects" id="projects">
+    <h2 class="hero-heading projects-heading" data-fade data-delay="0" data-y="40">Project</h2>
+    <div class="projects-stack"></div>
+  </section>
 
-<section id="get">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="kicker">The Offer</span>
-      <h2>What you get</h2>
-    </div>
+</main>
 
-    <div class="get-grid">
-      <div class="get-cell">
-        <div class="get-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <p>Customized product selection based on your clientele</p>
-      </div>
-      <div class="get-cell">
-        <div class="get-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v6"/><rect x="8" y="8" width="8" height="13" rx="2"/><path d="M9 12h6"/><path d="M10 2h4"/></svg></div>
-        <p>High-demand products — vapes, nicotine pouches, and more</p>
-      </div>
-      <div class="get-cell">
-        <div class="get-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></div>
-        <p>Ongoing inventory optimization based on sales performance</p>
-      </div>
-      <div class="get-cell">
-        <div class="get-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/><path d="M4 4l16 16" stroke-width="1.4" opacity="0.55"/></svg></div>
-        <p>No operational work required from staff</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="compliant" style="padding-top:0;">
-  <div class="wrap">
-    <div class="feature-row">
-      <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
-      <div>
-        <h3>Flexibility</h3>
-        <p>Every machine is tailored to your location, and inventory can be adjusted at any time to match customer demand and maximize revenue.</p>
-      </div>
-    </div>
-    <div class="feature-row">
-      <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/><path d="M9 12l2 2 4-4"/></svg></div>
-      <div>
-        <h3>Licensed &amp; Compliant</h3>
-        <p>We hold valid New York City Tobacco Retail Dealer and Electronic Cigarette Retail Dealer licenses, so every product sold and distributed through our machines is fully compliant with NYC regulations.</p>
-        <p>All machines operate in accordance with New York City and New York State law.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="panel-dark">
-  <div class="wrap">
-    <div class="section-head">
-      <span class="kicker" style="color:var(--teal)">Why Venues Partner With Us</span>
-      <h2 style="color:var(--bone)">Revenue that runs itself</h2>
-    </div>
-    <div class="stat-grid">
-      <div class="stat">
-        <div class="n">$0</div>
-        <div class="d">Upfront cost — machine, install, and licensing are on us.</div>
-      </div>
-      <div class="stat">
-        <div class="n">0 hrs</div>
-        <div class="d">Staff time spent restocking, pricing, or handling cash.</div>
-      </div>
-      <div class="stat">
-        <div class="n">100%</div>
-        <div class="d">NYC-licensed and state-compliant, from install to every restock.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="cta-band">
-  <div class="wrap">
-    <h3>Ready to add a machine to your bar or lounge?</h3>
-    <a class="btn btn-primary" href="tel:3478379427">Call 347-837-9427</a>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap foot-wrap">
-    <div class="monogram">
-      <img src="logo-mark.png" alt="" style="width:34px;height:34px;">
-      <div class="word" style="color:#8a8578;">ARAGVELI PALAZZOLO<b style="color:#c9c4b6;">LLC</b></div>
-    </div>
-    <div class="foot-links">
-      <a href="tel:3478379427"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>347-837-9427</a>
-      <a href="mailto:AragveliPalazzolo@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>AragveliPalazzolo@gmail.com</a>
-    </div>
-    <div class="foot-fine">&copy; 2026 Aragveli Palazzolo LLC. NYC Tobacco &amp; E-Cigarette Retail Dealer.</div>
-  </div>
-</footer>
-
-<script>
-(function(){
-  "use strict";
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* in-page anchor links scroll to target without touching the URL hash —
-     a hash in the URL makes the browser jump straight there on any reload
-     (refresh button, pull-to-refresh), landing away from the top */
-  document.addEventListener("click", function(e){
-    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
-    if(!a) return;
-    var id = a.getAttribute("href").slice(1);
-    if(!id) return;
-    var el = document.getElementById(id);
-    if(!el) return;
-    e.preventDefault();
-    el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-  });
-
-  /* scroll-triggered reveal for content sections */
-  if("IntersectionObserver" in window && !reduceMotion){
-    var groups = [
-      document.querySelectorAll(".get-cell"),
-      document.querySelectorAll(".feature-row"),
-      document.querySelectorAll(".stat"),
-      document.querySelectorAll(".section-head"),
-      document.querySelectorAll(".cta-band h3, .cta-band .btn")
-    ];
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          entry.target.classList.add("is-visible");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold:0.15, rootMargin:"0px 0px -8% 0px" });
-
-    groups.forEach(function(list){
-      list.forEach(function(el, i){
-        el.classList.add("reveal");
-        el.style.setProperty("--reveal-delay", Math.min(i * 70, 280) + "ms");
-        io.observe(el);
-      });
-    });
-  }
-
-  /* eased inertia scroll — desktop mouse only, off for touch and reduced-motion */
-  var isFinePointer = window.matchMedia("(pointer: fine)").matches;
-  if(reduceMotion || !isFinePointer) return;
-
-  document.documentElement.style.scrollBehavior = "auto";
-
-  var ease = 0.065;
-  var current = window.scrollY;
-  var target = current;
-  var ticking = false;
-
-  function maxScroll(){
-    return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-  }
-  function clamp(v){ return Math.min(maxScroll(), Math.max(0, v)); }
-
-  function requestTick(){
-    if(!ticking){ ticking = true; requestAnimationFrame(loop); }
-  }
-
-  function loop(){
-    current += (target - current) * ease;
-    var done = Math.abs(target - current) < 0.4;
-    if(done) current = target;
-    window.scrollTo(0, current);
-    if(done){ ticking = false; return; }
-    requestAnimationFrame(loop);
-  }
-
-  window.addEventListener("wheel", function(e){
-    var dy = e.deltaY;
-    if(e.deltaMode === 1) dy *= 18;
-    else if(e.deltaMode === 2) dy *= window.innerHeight;
-    target = clamp(target + dy);
-    e.preventDefault();
-    requestTick();
-  }, { passive:false });
-
-  window.addEventListener("scroll", function(){
-    var y = window.scrollY;
-    if(Math.abs(y - current) > 2){
-      current = y;
-      target = y;
-    }
-  }, { passive:true });
-
-  window.addEventListener("resize", function(){
-    target = clamp(target);
-    current = clamp(current);
-  });
-})();
-</script>
-
+<script src="lenis.min.js" defer></script>
+<script src="script.js" defer></script>
 <script data-goatcounter="https://ardithiyar.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
