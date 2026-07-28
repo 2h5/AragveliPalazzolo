@@ -62,6 +62,13 @@
       category: 'Live Demo',
       url: 'https://aragvelipalazzolo-nail-salon-demo.pages.dev/',
       domain: 'aragvelipalazzolo-nail-salon-demo.pages.dev'
+    },
+    {
+      num: '04',
+      name: 'Paris 2 Nails',
+      category: 'Live Demo',
+      url: 'https://paris-2-nails-demo.pages.dev/',
+      domain: 'paris-2-nails-demo.pages.dev'
     }
   ];
 
@@ -316,18 +323,14 @@
     var stack = document.querySelector('.projects-stack');
     if (!stack) return;
 
-    var total = PROJECTS.length;
     // Touch devices can't hover, and letting a finger scroll inside an
     // embedded frame traps the page scroll — so there we link out instead.
     var touch = window.matchMedia('(hover: none)').matches;
 
     PROJECTS.forEach(function (project, index) {
-      var container = document.createElement('div');
-      container.className = 'project-container';
-
       var card = document.createElement('div');
       card.className = 'project-card';
-      card.style.top = 'calc(var(--sticky-top, 6rem) + ' + index * 28 + 'px)';
+      card.style.setProperty('--card-z', index + 1);
 
       var head =
         '<div class="project-top">' +
@@ -371,7 +374,7 @@
           '</div>';
 
         pendingFrames.push({
-          container: container,
+          card: card,
           frame: card.querySelector('.project-iframe')
         });
 
@@ -388,15 +391,157 @@
         }
       }
 
-      container.appendChild(card);
-      stack.appendChild(container);
+      // Cards are direct children of the stack on purpose: a sticky element
+      // only stays pinned inside its own parent, so per-card wrappers would
+      // let each card slide away again instead of staying under the next one.
+      stack.appendChild(card);
 
       projectCards.push({
-        container: container,
         card: card,
-        targetScale: 1 - (total - 1 - index) * 0.03
+        index: index,
+        topPx: 0,
+        snapY: 0
       });
     });
+
+    layoutProjects();
+  }
+
+  /* Each card parks just below the header strip of the card before it, so a
+     covered card still shows its number and name. The offset is measured from
+     the real header rather than hard-coded, since it grows with the font
+     clamps. offsetTop/offsetHeight are used instead of rects because the cards
+     carry a scale transform. */
+  function layoutProjects() {
+    if (!projectCards.length) return;
+
+    var first = projectCards[0].card;
+    var mobile = window.innerWidth <= 560;
+
+    if (mobile) {
+      projectCards.forEach(function (item) {
+        item.card.style.top = '';
+        item.card.style.marginBottom = '';
+      });
+      document.documentElement.style.removeProperty('--frame-h');
+      return;
+    }
+
+    var head = first.querySelector('.project-top');
+    var peek = head.offsetTop + head.offsetHeight + 8;
+    var stickyTop = stickyTopPx();
+
+    // The deepest card sits under every header before it, so its preview gets
+    // whatever vertical room is left over.
+    var preview = first.querySelector('.project-frame, .project-preview-empty');
+    var chrome = first.offsetHeight - (preview ? preview.offsetHeight : 0);
+    var lastTop = stickyTop + (projectCards.length - 1) * peek;
+    var frameH = clamp(window.innerHeight - lastTop - chrome - 16, 170, 720);
+
+    document.documentElement.style.setProperty('--frame-h', Math.round(frameH) + 'px');
+
+    projectCards.forEach(function (item, index) {
+      item.topPx = stickyTop + index * peek;
+      item.card.style.top = item.topPx + 'px';
+    });
+
+    projectCards.forEach(function (item) {
+      item.snapY = absoluteTop(item.card) - item.topPx;
+    });
+  }
+
+  /* Layout position of an element, unaffected by its sticky shift or scale. */
+  function absoluteTop(el) {
+    var y = 0;
+    while (el) {
+      y += el.offsetTop;
+      el = el.offsetParent;
+    }
+    return y;
+  }
+
+  function stickyTopPx() {
+    var root = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    return parseFloat(document.documentElement.style.getPropertyValue('--sticky-top')) * root;
+  }
+
+  /* ==========================================================
+     PROJECTS — scroll snapping
+     ==========================================================
+     Once scrolling settles anywhere near the stack, the nearest card is
+     pulled into its resting position so the section advances card by card
+     instead of stopping half-way between two. */
+
+  var snapping = false;
+  var snapTimer = null;
+  var lastY = 0;
+  var scrollDir = 1;
+
+  function scrollY() {
+    return window.pageYOffset || document.documentElement.scrollTop || 0;
+  }
+
+  function snapProjects() {
+    if (snapping || reduceMotion) return;
+    if (window.innerWidth <= 560 || !projectCards.length) return;
+
+    var y = scrollY();
+    var vh = window.innerHeight;
+    var best = null;
+    var bestDist = Infinity;
+    var near = null;
+    var nearDist = Infinity;
+
+    projectCards.forEach(function (item) {
+      var delta = item.snapY - y;
+      var dist = Math.abs(delta);
+
+      if (dist < nearDist) {
+        nearDist = dist;
+        near = item.snapY;
+      }
+      // Only cards ahead of the direction of travel, so leaving the section
+      // downward isn't yanked back up to the card just passed.
+      if (delta * scrollDir >= -8 && dist < bestDist) {
+        bestDist = dist;
+        best = item.snapY;
+      }
+    });
+
+    if (best === null || bestDist > vh * 0.45) {
+      // A small drift off a resting card still settles back onto it.
+      best = nearDist < vh * 0.2 ? near : null;
+      bestDist = nearDist;
+    }
+
+    if (best === null || bestDist < 4) return;
+
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    best = clamp(best, 0, max);
+
+    snapping = true;
+    // Safety net: if the animation is interrupted its onComplete never runs,
+    // which would leave snapping wedged on.
+    setTimeout(function () {
+      snapping = false;
+    }, 900);
+
+    if (smoothScroll) {
+      smoothScroll.scrollTo(best, {
+        duration: 0.6,
+        lock: true,
+        onComplete: function () {
+          snapping = false;
+        }
+      });
+    } else {
+      window.scrollTo({ top: best, behavior: 'smooth' });
+    }
+  }
+
+  function queueSnap() {
+    if (snapTimer) clearTimeout(snapTimer);
+    snapTimer = setTimeout(snapProjects, 140);
   }
 
   /* Embedded sites are only fetched once their card nears the viewport, so
@@ -410,7 +555,7 @@
 
     for (var i = pendingFrames.length - 1; i >= 0; i--) {
       var item = pendingFrames[i];
-      var rect = item.container.getBoundingClientRect();
+      var rect = item.card.getBoundingClientRect();
 
       if (rect.top < vh + 400 && rect.bottom > -400) {
         item.frame.src = item.frame.getAttribute('data-src');
@@ -420,15 +565,25 @@
   }
 
   function updateProjects() {
-    if (window.innerWidth <= 560) return;
+    if (window.innerWidth <= 560 || !projectCards.length) return;
 
-    projectCards.forEach(function (item) {
-      var rect = item.container.getBoundingClientRect();
-      // Shrink the card as its container scrolls up past the viewport top,
-      // so earlier cards recede behind the ones stacking on top.
-      var progress = clamp(-rect.top / rect.height, 0, 1);
-      var scale = 1 + (item.targetScale - 1) * progress;
-      item.card.style.transform = 'scale(' + scale + ')';
+    var y = scrollY();
+
+    // How far each card has travelled from its own resting spot toward the
+    // next one's — 0 while it's the front card, 1 once it's fully covered.
+    projectCards.forEach(function (item, i) {
+      var next = projectCards[i + 1];
+      item.progress = next ? clamp((y - item.snapY) / (next.snapY - item.snapY), 0, 1) : 0;
+    });
+
+    // A card shrinks a notch for every card that has come to rest on top of
+    // it, so the stack reads as depth rather than a flat pile.
+    projectCards.forEach(function (item, i) {
+      var covered = 0;
+      for (var j = i; j < projectCards.length - 1; j++) {
+        covered += projectCards[j].progress;
+      }
+      item.card.style.transform = 'scale(' + (1 - Math.min(covered, 4) * 0.02) + ')';
     });
   }
 
@@ -437,7 +592,7 @@
      ========================================================== */
 
   function updateStickyTop() {
-    var top = window.innerWidth >= 768 ? '8rem' : '6rem';
+    var top = window.innerHeight < 760 ? '3.5rem' : window.innerWidth >= 768 ? '4.5rem' : '4rem';
     document.documentElement.style.setProperty('--sticky-top', top);
   }
 
@@ -446,8 +601,16 @@
      ========================================================== */
 
   var ticking = false;
+  var smoothScroll = null;
 
   function onScroll() {
+    var y = scrollY();
+    if (y !== lastY) {
+      scrollDir = y > lastY ? 1 : -1;
+      lastY = y;
+    }
+    queueSnap();
+
     if (ticking) return;
     ticking = true;
     window.requestAnimationFrame(function () {
@@ -476,6 +639,7 @@
       'resize',
       function () {
         updateStickyTop();
+        layoutProjects();
         measureMarquee();
         onScroll();
       },
@@ -492,7 +656,7 @@
 
     // Smooth scrolling
     if (!reduceMotion && typeof Lenis !== 'undefined') {
-      var lenis = new Lenis({
+      var lenis = smoothScroll = new Lenis({
         duration: 1.2,
         easing: function (t) {
           return Math.min(1, 1.001 - Math.pow(2, -10 * t));
