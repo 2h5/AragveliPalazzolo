@@ -58,9 +58,10 @@
     },
     {
       num: '03',
-      name: 'Your Business Here',
-      category: 'Available',
-      placeholder: true
+      name: 'Nail Salon',
+      category: 'Live Demo',
+      url: 'https://aragvelipalazzolo-nail-salon-demo.pages.dev/',
+      domain: 'aragvelipalazzolo-nail-salon-demo.pages.dev'
     }
   ];
 
