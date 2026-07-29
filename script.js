@@ -44,29 +44,29 @@
   var PROJECTS = [
     {
       num: '01',
-      name: 'Uptown Coffee Co.',
-      category: 'Maywood, NJ',
+      name: 'Local Cafe Concept',
+      category: 'Local cafe demo',
       url: 'https://uptown-coffee-demo.pages.dev/',
       domain: 'uptown-coffee-demo.pages.dev'
     },
     {
       num: '02',
-      name: 'The Blend Factory',
-      category: 'Brooklyn, NY',
+      name: 'Juice Bar Concept',
+      category: 'Local juice bar demo',
       url: 'https://theblendfactory-demo.pages.dev/',
       domain: 'theblendfactory-demo.pages.dev'
     },
     {
       num: '03',
-      name: 'Nail Salon',
-      category: 'Live Demo',
+      name: 'Nail Salon Concept',
+      category: 'Local nail salon demo',
       url: 'https://aragvelipalazzolo-nail-salon-demo.pages.dev/',
       domain: 'aragvelipalazzolo-nail-salon-demo.pages.dev'
     },
     {
       num: '04',
-      name: 'Paris 2 Nails',
-      category: 'Live Demo',
+      name: 'Beauty Studio Concept',
+      category: 'Local salon demo',
       url: 'https://paris-2-nails-demo.pages.dev/',
       domain: 'paris-2-nails-demo.pages.dev'
     }
