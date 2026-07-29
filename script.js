@@ -356,10 +356,6 @@
         card.innerHTML =
           head +
           '<div class="project-preview">' +
-          '<div class="browser-bar">' +
-          '<span class="browser-dots"><i></i><i></i><i></i></span>' +
-          '<span class="browser-url">' + project.domain + '</span>' +
-          '</div>' +
           '<div class="project-frame">' +
           '<iframe class="project-iframe" data-src="' + project.url + '" title="' + project.name +
           ' website preview" loading="lazy" tabindex="-1" ' +
@@ -416,6 +412,7 @@
     if (!projectCards.length) return;
 
     var first = projectCards[0].card;
+    var last = projectCards[projectCards.length - 1];
     var mobile = window.innerWidth <= 560;
 
     if (mobile) {
@@ -426,6 +423,9 @@
       document.documentElement.style.removeProperty('--frame-h');
       return;
     }
+
+    // Reset the measured end spacer before recalculating the stack.
+    last.card.style.marginBottom = '';
 
     var head = first.querySelector('.project-top');
     var peek = head.offsetTop + head.offsetHeight + 8;
@@ -448,6 +448,16 @@
     projectCards.forEach(function (item) {
       item.snapY = absoluteTop(item.card) - item.topPx;
     });
+
+    // The projects section is the end of the page. Match the document's
+    // maximum scroll position to the last card's resting position so the
+    // completed stack cannot be scrolled upward and dismantled. Measuring
+    // this from the generated cards keeps it correct for any project count.
+    var scrollingElement = document.scrollingElement || document.documentElement;
+    var currentMax = Math.max(0, scrollingElement.scrollHeight - window.innerHeight);
+    var currentMargin = parseFloat(getComputedStyle(last.card).marginBottom) || 0;
+    var correctedMargin = Math.max(0, currentMargin - (currentMax - last.snapY));
+    last.card.style.marginBottom = correctedMargin + 'px';
   }
 
   /* Layout position of an element, unaffected by its sticky shift or scale. */
@@ -648,6 +658,7 @@
 
     // Re-measure once the lazy marquee images have settled.
     window.addEventListener('load', function () {
+      layoutProjects();
       measureMarquee();
       onScroll();
     });

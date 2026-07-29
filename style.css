@@ -561,7 +561,13 @@ h1.hero-heading {
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   margin-top: -2.5rem;
-  padding: 5rem 1.25rem 6rem;
+  padding: 5rem 1.25rem 0;
+}
+
+/* Contains the final card's measured spacer so the page ends exactly when
+   the complete stack reaches its resting position. */
+.projects-stack {
+  display: flow-root;
 }
 
 .projects-heading {
@@ -648,44 +654,6 @@ h1.hero-heading {
   overflow: hidden;
   background: #141414;
   border: 1px solid rgba(215, 226, 234, 0.18);
-}
-
-.browser-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.9rem;
-  background: rgba(215, 226, 234, 0.07);
-  border-bottom: 1px solid rgba(215, 226, 234, 0.14);
-}
-
-.browser-dots {
-  display: flex;
-  gap: 0.4rem;
-  flex: 0 0 auto;
-}
-
-.browser-dots i {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(215, 226, 234, 0.3);
-}
-
-.browser-url {
-  color: #D7E2EA;
-  opacity: 0.55;
-  font-weight: 300;
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: rgba(12, 12, 12, 0.5);
-  border-radius: 9999px;
-  padding: 0.25rem 0.85rem;
-  flex: 1 1 auto;
-  max-width: 420px;
 }
 
 .project-frame {
@@ -862,7 +830,7 @@ h1.hero-heading {
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
     margin-top: -3rem;
-    padding: 5rem 2rem 6rem;
+    padding: 5rem 2rem 0;
   }
 
   .project-card {
@@ -974,7 +942,7 @@ h1.hero-heading {
     border-top-left-radius: 60px;
     border-top-right-radius: 60px;
     margin-top: -3.5rem;
-    padding: 5rem 2.5rem 8rem;
+    padding: 5rem 2.5rem 0;
   }
 
   .project-card {
@@ -1029,9 +997,6 @@ h1.hero-heading {
     font-size: 0.65rem;
   }
 
-  .browser-bar {
-    padding: 0.4rem 0.75rem;
-  }
 }
 
 /* ============================================================
@@ -1039,6 +1004,10 @@ h1.hero-heading {
    ============================================================ */
 
 @media (max-width: 560px) {
+  .projects {
+    padding-bottom: 2rem;
+  }
+
   .project-frame,
   .project-preview-empty {
     height: clamp(280px, 62vw, 380px);
