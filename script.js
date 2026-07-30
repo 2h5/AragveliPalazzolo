@@ -69,6 +69,13 @@
       category: 'Local salon demo',
       url: 'https://paris-2-nails-demo.pages.dev/',
       domain: 'paris-2-nails-demo.pages.dev'
+    },
+    {
+      num: '05',
+      name: 'Coffee Shop Concept',
+      category: 'Local coffee shop demo',
+      url: 'https://lil-honey-coffee-demo.pages.dev/',
+      domain: 'lil-honey-coffee-demo.pages.dev'
     }
   ];
 
