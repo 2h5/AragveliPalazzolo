@@ -76,6 +76,13 @@
       category: 'Local coffee shop demo',
       url: 'https://lil-honey-coffee-demo.pages.dev/',
       domain: 'lil-honey-coffee-demo.pages.dev'
+    },
+    {
+      num: '06',
+      name: 'Aromati Cafe Concept',
+      category: 'Local cafe & wine bar demo',
+      url: 'https://aromati-cafe-demo.pages.dev/',
+      domain: 'aromati-cafe-demo.pages.dev'
     }
   ];
 
