@@ -10,7 +10,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" rel="stylesheet" />
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" as="style" />
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" rel="stylesheet" /></noscript>
 
 <link rel="stylesheet" href="style.css" />
 </head>
@@ -26,6 +28,7 @@
     <div class="hero-video-overlay"></div>
 
     <nav class="navbar liquid-glass" data-fade data-delay="0" data-y="-20">
+      <span class="navbar-selection" aria-hidden="true"></span>
       <img class="navbar-logo" src="logo-mark-white.png" alt="AragveliPalazzolo" />
       <a href="#about">About</a>
       <a href="#services">Services</a>
@@ -65,19 +68,19 @@
     <img class="deco deco-tl"
       data-fade data-delay="0.1" data-x="-80" data-y="0" data-duration="0.9"
       src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
-      alt="" aria-hidden="true" />
+      alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <img class="deco deco-bl"
       data-fade data-delay="0.25" data-x="-80" data-y="0" data-duration="0.9"
       src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
-      alt="" aria-hidden="true" />
+      alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <img class="deco deco-tr"
       data-fade data-delay="0.15" data-x="80" data-y="0" data-duration="0.9"
       src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
-      alt="" aria-hidden="true" />
+      alt="" aria-hidden="true" loading="lazy" decoding="async" />
     <img class="deco deco-br"
       data-fade data-delay="0.3" data-x="80" data-y="0" data-duration="0.9"
       src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
-      alt="" aria-hidden="true" />
+      alt="" aria-hidden="true" loading="lazy" decoding="async" />
 
     <div class="about-inner">
       <h2 class="hero-heading about-heading" data-fade data-delay="0" data-y="40">About us</h2>
@@ -97,23 +100,23 @@
   <section class="services" id="services">
     <h2 class="services-heading">Services</h2>
 
-    <div class="services-list">
+    <div class="services-list" data-service-typewriter>
 
-      <div class="service-item" data-fade data-delay="0">
+      <div class="service-item">
         <div class="service-body">
           <h3 class="service-name">Website Design</h3>
           <p class="service-desc">Clean, modern designs built around your business and your customers, not a generic template.</p>
         </div>
       </div>
 
-      <div class="service-item" data-fade data-delay="0.1">
+      <div class="service-item">
         <div class="service-body">
           <h3 class="service-name">Website Development</h3>
           <p class="service-desc">Fast, mobile-friendly sites built from scratch and ready to go live.</p>
         </div>
       </div>
 
-      <div class="service-item" data-fade data-delay="0.2">
+      <div class="service-item">
         <div class="service-body">
           <h3 class="service-name">Ongoing Support</h3>
           <p class="service-desc">Updates and changes whenever you need them, without the extra hassle.</p>
@@ -133,7 +136,7 @@
 
 <script src="lenis.min.js" defer></script>
 <script src="script.js" defer></script>
-<script data-goatcounter="https://ardithiyar.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://ardithiyar.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 </body>
 </html>

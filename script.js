@@ -174,6 +174,256 @@
   }
 
   /* ==========================================================
+     LIQUID GLASS — move the material highlight with the pointer
+     ========================================================== */
+
+  function initLiquidGlass() {
+    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var glasses = document.querySelectorAll('.liquid-glass');
+
+    Array.prototype.forEach.call(glasses, function (glass) {
+      var resetTimer = null;
+
+      function moveHighlight(e) {
+        var rect = glass.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        glass.style.setProperty('--glass-x', x.toFixed(2) + '%');
+        glass.style.setProperty('--glass-y', y.toFixed(2) + '%');
+      }
+
+      glass.addEventListener(
+        'pointerenter',
+        function (e) {
+          if (resetTimer) clearTimeout(resetTimer);
+          moveHighlight(e);
+          glass.classList.add('glass-pointer-active');
+        },
+        { passive: true }
+      );
+
+      glass.addEventListener(
+        'pointermove',
+        function (e) {
+          moveHighlight(e);
+        },
+        { passive: true }
+      );
+
+      glass.addEventListener('pointerleave', function () {
+        glass.classList.remove('glass-pointer-active');
+        resetTimer = setTimeout(function () {
+          glass.style.setProperty('--glass-x', '50%');
+          glass.style.setProperty('--glass-y', '0%');
+          resetTimer = null;
+        }, 240);
+      });
+    });
+  }
+
+  /* ==========================================================
+     NAV BUBBLE — spring between the four navigation choices
+     ========================================================== */
+
+  function initNavBubble() {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var nav = document.querySelector('.navbar');
+    if (!nav) return;
+
+    var bubble = nav.querySelector('.navbar-selection');
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+    var activeLink = null;
+    if (!bubble || !links.length) return;
+
+    function selectLink(link) {
+      var navRect = nav.getBoundingClientRect();
+      var linkRect = link.getBoundingClientRect();
+      var padX = 18;
+      var height = Math.min(navRect.height - 6, linkRect.height + 18);
+      var width = linkRect.width + padX * 2;
+      var x = linkRect.left - navRect.left - padX;
+      var y = (navRect.height - height) / 2;
+
+      if (activeLink !== link) {
+        links.forEach(function (item) {
+          item.classList.toggle('is-bubble-active', item === link);
+        });
+        activeLink = link;
+      }
+
+      bubble.style.setProperty('--selection-x', x.toFixed(2) + 'px');
+      bubble.style.setProperty('--selection-y', y.toFixed(2) + 'px');
+      bubble.style.setProperty('--selection-w', width.toFixed(2) + 'px');
+      bubble.style.setProperty('--selection-h', height.toFixed(2) + 'px');
+    }
+
+    function selectNearest(pointerX) {
+      var nearest = links[0];
+      var nearestDistance = Infinity;
+
+      links.forEach(function (link) {
+        var rect = link.getBoundingClientRect();
+        var distance = Math.abs(pointerX - (rect.left + rect.width / 2));
+
+        if (distance < nearestDistance) {
+          nearest = link;
+          nearestDistance = distance;
+        }
+      });
+
+      selectLink(nearest);
+    }
+
+    function hideBubble() {
+      nav.classList.remove('has-selection');
+      links.forEach(function (link) {
+        link.classList.remove('is-bubble-active');
+      });
+      activeLink = null;
+    }
+
+    nav.addEventListener(
+      'pointerenter',
+      function (e) {
+        if (e.pointerType === 'touch') return;
+        selectNearest(e.clientX);
+        nav.classList.add('has-selection');
+      },
+      { passive: true }
+    );
+
+    nav.addEventListener(
+      'pointermove',
+      function (e) {
+        if (e.pointerType === 'touch') return;
+        selectNearest(e.clientX);
+      },
+      { passive: true }
+    );
+
+    nav.addEventListener('pointerleave', hideBubble);
+
+    nav.addEventListener('focusin', function (e) {
+      if (links.indexOf(e.target) === -1) return;
+      selectLink(e.target);
+      nav.classList.add('has-selection');
+    });
+
+    nav.addEventListener('focusout', function (e) {
+      if (!nav.contains(e.relatedTarget)) hideBubble();
+    });
+
+    window.addEventListener(
+      'resize',
+      function () {
+        if (activeLink) selectLink(activeLink);
+      },
+      { passive: true }
+    );
+  }
+
+  /* ==========================================================
+     SERVICES TYPEWRITER — reveal each service in sequence
+     ========================================================== */
+
+  function initServiceTypewriter() {
+    var list = document.querySelector('[data-service-typewriter]');
+    if (!list || reduceMotion || !('IntersectionObserver' in window)) return;
+
+    var rows = [];
+
+    Array.prototype.forEach.call(list.querySelectorAll('.service-item'), function (row) {
+      var fields = [];
+
+      Array.prototype.forEach.call(row.querySelectorAll('.service-name, .service-desc'), function (element) {
+        var fullText = element.textContent.trim();
+        var screenReaderText = document.createElement('span');
+        var reserve = document.createElement('span');
+        var output = document.createElement('span');
+
+        screenReaderText.className = 'service-typewriter-sr';
+        screenReaderText.textContent = fullText;
+        reserve.className = 'service-typewriter-reserve';
+        reserve.setAttribute('aria-hidden', 'true');
+        reserve.textContent = fullText;
+        output.className = 'service-typewriter-output';
+        output.setAttribute('aria-hidden', 'true');
+
+        element.textContent = '';
+        element.classList.add('service-typewriter-field');
+        element.appendChild(screenReaderText);
+        element.appendChild(reserve);
+        element.appendChild(output);
+
+        fields.push({
+          element: element,
+          output: output,
+          text: fullText
+        });
+      });
+
+      rows.push(fields);
+    });
+
+    function typeField(field, speed, complete) {
+      var index = 0;
+      field.element.classList.add('is-typing');
+
+      function typeNext() {
+        index += 1;
+        field.output.textContent = field.text.slice(0, index);
+
+        if (index >= field.text.length) {
+          field.element.classList.remove('is-typing');
+          complete();
+          return;
+        }
+
+        var character = field.text.charAt(index - 1);
+        var pause = character === ',' ? 30 : character === '.' ? 45 : 0;
+        setTimeout(typeNext, speed + pause);
+      }
+
+      typeNext();
+    }
+
+    function playRow(rowIndex) {
+      if (rowIndex >= rows.length) return;
+
+      var title = rows[rowIndex][0];
+      var description = rows[rowIndex][1];
+
+      typeField(title, 14, function () {
+        setTimeout(function () {
+          typeField(description, 4, function () {
+            setTimeout(function () {
+              playRow(rowIndex + 1);
+            }, 70);
+          });
+        }, 45);
+      });
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(list);
+          setTimeout(function () {
+            playRow(0);
+          }, 90);
+        });
+      },
+      { rootMargin: '0px 0px -14% 0px', threshold: 0.2 }
+    );
+
+    observer.observe(list);
+  }
+
+  /* ==========================================================
      MARQUEE — scroll-linked horizontal rows
      ========================================================== */
 
@@ -647,6 +897,9 @@
     updateStickyTop();
     initFadeIn();
     initMagnets();
+    initLiquidGlass();
+    initNavBubble();
+    initServiceTypewriter();
     initMarquee();
     initAnimatedText();
     initProjects();
