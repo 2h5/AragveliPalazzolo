@@ -79,7 +79,7 @@
     },
     {
       num: '06',
-      name: 'Aromati Cafe Concept',
+      name: 'Café & Wine Bar Concept',
       category: 'Local cafe & wine bar demo',
       url: 'https://aromati-cafe-demo.pages.dev/',
       domain: 'aromati-cafe-demo.pages.dev'
