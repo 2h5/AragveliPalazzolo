@@ -702,13 +702,7 @@ h1.hero-heading {
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   margin-top: -2.5rem;
-  padding: 5rem 1.25rem 0;
-}
-
-/* Contains the final card's measured spacer so the page ends exactly when
-   the complete stack reaches its resting position. */
-.projects-stack {
-  display: flow-root;
+  padding: 5rem 1.25rem 5rem;
 }
 
 .projects-heading {
@@ -718,102 +712,86 @@ h1.hero-heading {
   line-height: 1;
   letter-spacing: -0.025em;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1.25rem;
 }
 
-/* Every card is a direct child of the stack so they share one sticky
-   containing block — a card stays pinned until the whole stack scrolls out,
-   which is what lets the later cards ride up over it. Vertical spacing (and
-   with it the scroll distance per card) is set in JS. */
-.project-card {
-  position: sticky;
-  top: 6rem;
-  border-radius: 40px;
-  border: 2px solid #D7E2EA;
-  background: #0C0C0C;
-  padding: 1rem;
-  transform-origin: top center;
-  will-change: transform;
-  /* Just enough to separate two cards in transit — any more reads as a hole
-     in the stack while scrolling. */
-  margin-bottom: 20px;
-  /* Cards physically overlap, so the later ones must paint above. */
-  z-index: var(--card-z, 1);
-  box-shadow: 0 -18px 40px rgba(0, 0, 0, 0.55);
-}
-
-.project-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding: 0 0.5rem 0.55rem;
-}
-
-.project-top-left {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-}
-
-/* Sized to stay legible in the thin strip a covered card leaves behind. */
-.project-num {
+.projects-lead {
   color: #D7E2EA;
-  font-weight: 900;
-  font-size: clamp(1.9rem, 4vw, 2.75rem);
-  line-height: 1;
-}
-
-.project-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.project-category {
-  color: #D7E2EA;
-  opacity: 0.6;
+  opacity: 0.55;
   font-weight: 300;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: clamp(0.7rem, 1.2vw, 0.95rem);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 44ch;
+  margin: 0 auto 3.5rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
 }
 
-.project-name {
-  color: #D7E2EA;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: clamp(1rem, 1.6vw, 1.5rem);
-  line-height: 1.1;
+/* ---------- Showcase: one large preview, one index of demos ----------
+   The list carries the browsing, so adding demos lengthens a quiet column
+   instead of adding another full-height card to the page. */
+.showcase {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
-/* ---------- Live site preview ---------- */
-.project-preview {
-  border-radius: 20px;
+/* The preview leads on narrow screens: the index below it is the control. */
+.showcase-stage {
+  order: -1;
+  min-width: 0;
+}
+
+.showcase-window {
+  border-radius: 22px;
+  border: 1px solid rgba(215, 226, 234, 0.22);
+  background: #101010;
   overflow: hidden;
-  background: #141414;
-  border: 1px solid rgba(215, 226, 234, 0.18);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
 }
 
-.project-frame {
+/* ---------- Live preview ---------- */
+/* Portrait on phones, desktop-shaped from tablets up — JS renders the demo
+   at a real viewport width and scales it to fit, so the embed reads as the
+   site it is rather than a squeezed column. */
+.showcase-viewport {
   position: relative;
-  /* JS trims this to whatever is left under the stacked headers; the clamp
-     is the pre-script fallback. */
-  height: var(--frame-h, clamp(240px, 34vh, 460px));
+  aspect-ratio: 3 / 4;
   background: #141414;
+  overflow: hidden;
 }
 
-.project-iframe {
-  width: 100%;
+.showcase-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 420ms ease;
+}
+
+.showcase-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Fills the panel exactly, at 1:1 — no transform, so the demo rasterises at
+   the display's own resolution. The surplus width parks the embedded site's
+   own scrollbar outside the panel, where overflow crops it. */
+.showcase-iframe {
+  width: calc(100% + 22px);
   height: 100%;
   border: 0;
   display: block;
+  background: #141414;
+  /* Re-armed by the shield: an embedded site must not swallow page scroll
+     until the visitor deliberately steps into it. */
+  pointer-events: none;
 }
 
-/* Blocks the frame from eating page scroll until deliberately clicked. */
-.project-shield {
+.showcase-slide.is-interactive .showcase-iframe {
+  pointer-events: auto;
+}
+
+.showcase-shield {
   position: absolute;
   inset: 0;
   display: flex;
@@ -828,11 +806,11 @@ h1.hero-heading {
   text-decoration: none;
 }
 
-.project-shield:hover {
+.showcase-shield:hover {
   background: rgba(12, 12, 12, 0.25);
 }
 
-.project-shield span {
+.showcase-shield span {
   background: rgba(12, 12, 12, 0.8);
   color: #D7E2EA;
   border: 1px solid rgba(215, 226, 234, 0.3);
@@ -846,22 +824,23 @@ h1.hero-heading {
   -webkit-backdrop-filter: blur(6px);
 }
 
-.project-card.is-interactive .project-shield {
+.showcase-slide.is-interactive .showcase-shield {
   display: none;
 }
 
-/* ---------- Open slot card ---------- */
-.project-preview-empty {
+/* ---------- Open slot ---------- */
+.showcase-empty {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: var(--frame-h, clamp(240px, 34vh, 460px));
-  border-style: dashed;
-  border-color: rgba(215, 226, 234, 0.25);
-  background: transparent;
+  margin: 1rem;
+  border: 1px dashed rgba(215, 226, 234, 0.25);
+  border-radius: 16px;
 }
 
-.project-empty-text {
+.showcase-empty p {
   color: #D7E2EA;
   opacity: 0.5;
   font-weight: 300;
@@ -870,6 +849,154 @@ h1.hero-heading {
   line-height: 1.5;
   font-size: clamp(0.95rem, 1.8vw, 1.25rem);
   padding: 0 1.5rem;
+}
+
+/* ---------- Index ---------- */
+.showcase-index {
+  min-width: 0;
+}
+
+.showcase-index ol {
+  list-style: none;
+}
+
+.showcase-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #D7E2EA;
+  opacity: 0.45;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  padding-bottom: 0.9rem;
+}
+
+.showcase-item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0.5rem 1rem 0.75rem;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid rgba(215, 226, 234, 0.14);
+  color: #D7E2EA;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 250ms ease, padding-left 250ms ease;
+}
+
+.showcase-index li:last-child .showcase-item {
+  border-bottom: 1px solid rgba(215, 226, 234, 0.14);
+}
+
+/* The rail marks the selected demo without adding another border to scan. */
+.showcase-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  bottom: 0.85rem;
+  width: 2px;
+  border-radius: 2px;
+  background: #D7E2EA;
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.showcase-item:hover,
+.showcase-item:focus-visible {
+  opacity: 0.8;
+}
+
+.showcase-item.is-active {
+  opacity: 1;
+  padding-left: 1.25rem;
+}
+
+.showcase-item.is-active::before {
+  transform: scaleY(1);
+}
+
+.showcase-num {
+  flex: none;
+  font-weight: 900;
+  font-size: 1.35rem;
+  line-height: 1;
+  min-width: 2.1ch;
+}
+
+.showcase-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.showcase-category {
+  opacity: 0.6;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+}
+
+.showcase-name {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+  line-height: 1.15;
+}
+
+.showcase-foot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1.75rem;
+}
+
+@media (min-width: 700px) {
+  .showcase-viewport {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (min-width: 1000px) {
+  .showcase {
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* Index left, preview right — and the preview holds still while the index
+     is read. */
+  .showcase-stage {
+    order: 0;
+    position: sticky;
+    top: 5.5rem;
+  }
+
+  .showcase-window {
+    border-radius: 26px;
+  }
+
+  /* The panel takes every pixel of width on offer and fills the fold, so the
+     ratio is dropped rather than capped — capping the height of a box that
+     still carries an aspect-ratio transfers straight back into its width and
+     leaves dead space beside the preview. A pinned panel also can't be taller
+     than the viewport, which is what the fold-height sets. */
+  .showcase-viewport {
+    aspect-ratio: auto;
+    height: calc(100vh - 9rem);
+    min-height: 420px;
+  }
 }
 
 /* ============================================================
@@ -971,17 +1098,7 @@ h1.hero-heading {
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
     margin-top: -3rem;
-    padding: 5rem 2rem 0;
-  }
-
-  .project-card {
-    border-radius: 40px;
-    padding: 1.25rem;
-  }
-
-  .project-preview,
-  .project-preview-empty {
-    border-radius: 26px;
+    padding: 5rem 2rem 6rem;
   }
 }
 
@@ -1083,18 +1200,7 @@ h1.hero-heading {
     border-top-left-radius: 60px;
     border-top-right-radius: 60px;
     margin-top: -3.5rem;
-    padding: 5rem 2.5rem 0;
-  }
-
-  .project-card {
-    top: 4.5rem;
-    border-radius: 44px;
-    padding: 1.25rem;
-  }
-
-  .project-preview,
-  .project-preview-empty {
-    border-radius: 32px;
+    padding: 6rem 2rem 7rem;
   }
 }
 
@@ -1113,53 +1219,35 @@ h1.hero-heading {
 }
 
 /* ============================================================
-   Short viewports — four stacked headers eat the height, so the
-   peeking strip gets thinner
+   Short viewports — the sticky preview must still clear the fold
    ============================================================ */
 
-@media (min-width: 561px) and (max-height: 760px) {
-  .project-card {
-    padding: 1rem;
+@media (min-width: 1000px) and (max-height: 820px) {
+  .showcase-stage {
+    top: 4.5rem;
   }
 
-  .project-top {
-    padding: 0 0.5rem 0.6rem;
+  .showcase-item {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
   }
 
-  .project-num {
-    font-size: 1.6rem;
+  .showcase-num {
+    font-size: 1.15rem;
   }
-
-  .project-name {
-    font-size: 1rem;
-  }
-
-  .project-category {
-    font-size: 0.65rem;
-  }
-
 }
 
 /* ============================================================
-   Small screens — project card stacking gets cramped
+   Small screens
    ============================================================ */
 
 @media (max-width: 560px) {
-  .projects {
-    padding-bottom: 2rem;
+  .showcase-window {
+    border-radius: 18px;
   }
 
-  .project-frame,
-  .project-preview-empty {
-    height: clamp(280px, 62vw, 380px);
-  }
-
-  .project-card {
-    position: relative;
-    top: 0 !important;
-    margin-bottom: 2rem;
-    transform: none !important;
-    box-shadow: none;
+  .showcase-item {
+    gap: 0.85rem;
   }
 }
 

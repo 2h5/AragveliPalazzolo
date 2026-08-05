@@ -231,7 +231,7 @@
   }
 
   /* ==========================================================
-     NAV BUBBLE — spring between the four navigation choices
+     NAV BUBBLE — spring between the navigation choices
      ========================================================== */
 
   function initNavBubble() {
@@ -577,298 +577,189 @@
   }
 
   /* ==========================================================
-     PROJECTS — sticky stacking cards
-     ========================================================== */
+     PROJECTS — showcase (index + one large live preview)
+     ==========================================================
+     One preview panel is reused by every demo, so the section keeps the
+     same footprint no matter how many concepts get added — and the panel
+     can be big, since it is the only one on the page. */
 
-  var projectCards = [];
-  var pendingFrames = [];
+  var showcaseSlides = [];
+  var showcaseItems = [];
+  var showcaseViewport = null;
+  var showcaseOpen = null;
+  var showcaseActive = -1;
+  var showcaseTouch = false;
 
   function initProjects() {
-    var stack = document.querySelector('.projects-stack');
-    if (!stack) return;
+    var root = document.querySelector('.showcase');
+    if (!root || !PROJECTS.length) return;
 
     // Touch devices can't hover, and letting a finger scroll inside an
     // embedded frame traps the page scroll — so there we link out instead.
-    var touch = window.matchMedia('(hover: none)').matches;
+    showcaseTouch = window.matchMedia('(hover: none)').matches;
 
-    PROJECTS.forEach(function (project, index) {
-      var card = document.createElement('div');
-      card.className = 'project-card';
-      card.style.setProperty('--card-z', index + 1);
+    var stage = document.createElement('div');
+    stage.className = 'showcase-stage';
+    stage.innerHTML =
+      '<div class="showcase-window"><div class="showcase-viewport"></div></div>';
 
-      var head =
-        '<div class="project-top">' +
-        '<div class="project-top-left">' +
-        '<span class="project-num">' + project.num + '</span>' +
-        '<div class="project-meta">' +
-        '<span class="project-category">' + project.category + '</span>' +
-        '<h3 class="project-name">' + project.name + '</h3>' +
-        '</div>' +
-        '</div>' +
-        (project.placeholder
-          ? '<a class="btn-live" href="mailto:AragveliPalazzolo@gmail.com">Get Started</a>'
-          : '<a class="btn-live" href="' + project.url + '" target="_blank" rel="noopener noreferrer">Live Project</a>') +
-        '</div>';
+    showcaseViewport = stage.querySelector('.showcase-viewport');
 
-      if (project.placeholder) {
-        card.innerHTML =
-          head +
-          '<div class="project-preview project-preview-empty">' +
-          '<p class="project-empty-text">This spot is open &mdash; your shop could be the next one here.</p>' +
-          '</div>';
-      } else {
-        card.innerHTML =
-          head +
-          '<div class="project-preview">' +
-          '<div class="project-frame">' +
-          '<iframe class="project-iframe" data-src="' + project.url + '" title="' + project.name +
-          ' website preview" loading="lazy" tabindex="-1" ' +
-          'sandbox="allow-scripts allow-same-origin allow-popups"></iframe>' +
-          '<' + (touch ? 'a' : 'button') + ' class="project-shield"' +
-          (touch
-            ? ' href="' + project.url + '" target="_blank" rel="noopener noreferrer"'
-            : ' type="button"') +
-          '><span>' + (touch ? 'Open live site' : 'Click to explore') + '</span></' +
-          (touch ? 'a' : 'button') + '>' +
-          '</div>' +
-          '</div>';
+    var index = document.createElement('div');
+    index.className = 'showcase-index';
+    index.innerHTML =
+      '<div class="showcase-label"><span>The demos</span><span>' +
+      PROJECTS.length + ' concepts</span></div>';
 
-        pendingFrames.push({
-          card: card,
-          frame: card.querySelector('.project-iframe')
-        });
+    var list = document.createElement('ol');
+    list.setAttribute('role', 'tablist');
+    list.setAttribute('aria-label', 'Demo concepts');
+    index.appendChild(list);
 
-        if (!touch) {
-          var shield = card.querySelector('.project-shield');
-          shield.addEventListener('click', function () {
-            card.classList.add('is-interactive');
-          });
-          // Re-arm the shield on the way out so the next scroll past the
-          // card isn't swallowed by the frame.
-          card.addEventListener('mouseleave', function () {
-            card.classList.remove('is-interactive');
-          });
-        }
-      }
-
-      // Cards are direct children of the stack on purpose: a sticky element
-      // only stays pinned inside its own parent, so per-card wrappers would
-      // let each card slide away again instead of staying under the next one.
-      stack.appendChild(card);
-
-      projectCards.push({
-        card: card,
-        index: index,
-        topPx: 0,
-        snapY: 0
-      });
+    PROJECTS.forEach(function (project, i) {
+      buildSlide(project, i);
+      buildIndexItem(project, i, list);
     });
 
-    layoutProjects();
+    // The live link follows the index rather than sitting on the preview, so
+    // nothing frames the demo but its own edges.
+    var foot = document.createElement('div');
+    foot.className = 'showcase-foot';
+    foot.innerHTML =
+      '<a class="showcase-open btn-live" target="_blank" rel="noopener noreferrer">Open live</a>';
+    index.appendChild(foot);
+
+    showcaseOpen = foot.querySelector('.showcase-open');
+
+    root.appendChild(index);
+    root.appendChild(stage);
+
+    setProject(0, false);
   }
 
-  /* Each card parks just below the header strip of the card before it, so a
-     covered card still shows its number and name. The offset is measured from
-     the real header rather than hard-coded, since it grows with the font
-     clamps. offsetTop/offsetHeight are used instead of rects because the cards
-     carry a scale transform. */
-  function layoutProjects() {
-    if (!projectCards.length) return;
+  function buildSlide(project, i) {
+    var slide = document.createElement('div');
+    slide.className = 'showcase-slide';
+    slide.id = 'showcase-slide-' + i;
+    slide.setAttribute('role', 'tabpanel');
+    slide.setAttribute('aria-labelledby', 'showcase-tab-' + i);
 
-    var first = projectCards[0].card;
-    var last = projectCards[projectCards.length - 1];
-    var mobile = window.innerWidth <= 560;
+    var frame = null;
 
-    if (mobile) {
-      projectCards.forEach(function (item) {
-        item.card.style.top = '';
-        item.card.style.marginBottom = '';
-      });
-      document.documentElement.style.removeProperty('--frame-h');
-      return;
-    }
-
-    // Reset the measured end spacer before recalculating the stack.
-    last.card.style.marginBottom = '';
-
-    var head = first.querySelector('.project-top');
-    var peek = head.offsetTop + head.offsetHeight + 8;
-    var stickyTop = stickyTopPx();
-
-    // The deepest card sits under every header before it, so its preview gets
-    // whatever vertical room is left over.
-    var preview = first.querySelector('.project-frame, .project-preview-empty');
-    var chrome = first.offsetHeight - (preview ? preview.offsetHeight : 0);
-    var lastTop = stickyTop + (projectCards.length - 1) * peek;
-    var frameH = clamp(window.innerHeight - lastTop - chrome - 16, 170, 720);
-
-    document.documentElement.style.setProperty('--frame-h', Math.round(frameH) + 'px');
-
-    projectCards.forEach(function (item, index) {
-      item.topPx = stickyTop + index * peek;
-      item.card.style.top = item.topPx + 'px';
-    });
-
-    projectCards.forEach(function (item) {
-      item.snapY = absoluteTop(item.card) - item.topPx;
-    });
-
-    // The projects section is the end of the page. Match the document's
-    // maximum scroll position to the last card's resting position so the
-    // completed stack cannot be scrolled upward and dismantled. Measuring
-    // this from the generated cards keeps it correct for any project count.
-    var scrollingElement = document.scrollingElement || document.documentElement;
-    var currentMax = Math.max(0, scrollingElement.scrollHeight - window.innerHeight);
-    var currentMargin = parseFloat(getComputedStyle(last.card).marginBottom) || 0;
-    var correctedMargin = Math.max(0, currentMargin - (currentMax - last.snapY));
-    last.card.style.marginBottom = correctedMargin + 'px';
-  }
-
-  /* Layout position of an element, unaffected by its sticky shift or scale. */
-  function absoluteTop(el) {
-    var y = 0;
-    while (el) {
-      y += el.offsetTop;
-      el = el.offsetParent;
-    }
-    return y;
-  }
-
-  function stickyTopPx() {
-    var root = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    return parseFloat(document.documentElement.style.getPropertyValue('--sticky-top')) * root;
-  }
-
-  /* ==========================================================
-     PROJECTS — scroll snapping
-     ==========================================================
-     Once scrolling settles anywhere near the stack, the nearest card is
-     pulled into its resting position so the section advances card by card
-     instead of stopping half-way between two. */
-
-  var snapping = false;
-  var snapTimer = null;
-  var lastY = 0;
-  var scrollDir = 1;
-
-  function scrollY() {
-    return window.pageYOffset || document.documentElement.scrollTop || 0;
-  }
-
-  function snapProjects() {
-    if (snapping || reduceMotion) return;
-    if (window.innerWidth <= 560 || !projectCards.length) return;
-
-    var y = scrollY();
-    var vh = window.innerHeight;
-    var best = null;
-    var bestDist = Infinity;
-    var near = null;
-    var nearDist = Infinity;
-
-    projectCards.forEach(function (item) {
-      var delta = item.snapY - y;
-      var dist = Math.abs(delta);
-
-      if (dist < nearDist) {
-        nearDist = dist;
-        near = item.snapY;
-      }
-      // Only cards ahead of the direction of travel, so leaving the section
-      // downward isn't yanked back up to the card just passed.
-      if (delta * scrollDir >= -8 && dist < bestDist) {
-        bestDist = dist;
-        best = item.snapY;
-      }
-    });
-
-    if (best === null || bestDist > vh * 0.45) {
-      // A small drift off a resting card still settles back onto it.
-      best = nearDist < vh * 0.2 ? near : null;
-      bestDist = nearDist;
-    }
-
-    if (best === null || bestDist < 4) return;
-
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    best = clamp(best, 0, max);
-
-    snapping = true;
-    // Safety net: if the animation is interrupted its onComplete never runs,
-    // which would leave snapping wedged on.
-    setTimeout(function () {
-      snapping = false;
-    }, 900);
-
-    if (smoothScroll) {
-      smoothScroll.scrollTo(best, {
-        duration: 0.6,
-        lock: true,
-        onComplete: function () {
-          snapping = false;
-        }
-      });
+    if (project.placeholder) {
+      slide.innerHTML =
+        '<div class="showcase-empty"><p>This spot is open &mdash; your shop could be the next one here.</p></div>';
     } else {
-      window.scrollTo({ top: best, behavior: 'smooth' });
-    }
-  }
+      slide.innerHTML =
+        '<iframe class="showcase-iframe" data-src="' + project.url + '" title="' +
+        project.name + ' website preview" loading="lazy" tabindex="-1" ' +
+        'sandbox="allow-scripts allow-same-origin allow-popups"></iframe>' +
+        '<' + (showcaseTouch ? 'a' : 'button') + ' class="showcase-shield"' +
+        (showcaseTouch
+          ? ' href="' + project.url + '" target="_blank" rel="noopener noreferrer"'
+          : ' type="button"') +
+        '><span>' + (showcaseTouch ? 'Open live site' : 'Click to explore') + '</span></' +
+        (showcaseTouch ? 'a' : 'button') + '>';
 
-  function queueSnap() {
-    if (snapTimer) clearTimeout(snapTimer);
-    snapTimer = setTimeout(snapProjects, 140);
-  }
+      frame = slide.querySelector('.showcase-iframe');
 
-  /* Embedded sites are only fetched once their card nears the viewport, so
-     three live sites don't compete with the initial page load. This rides the
-     existing scroll loop rather than IntersectionObserver — an iframe with no
-     src yet doesn't reliably report intersections. */
-  function loadNearbyFrames() {
-    if (!pendingFrames.length) return;
-
-    var vh = window.innerHeight;
-
-    for (var i = pendingFrames.length - 1; i >= 0; i--) {
-      var item = pendingFrames[i];
-      var rect = item.card.getBoundingClientRect();
-
-      if (rect.top < vh + 400 && rect.bottom > -400) {
-        item.frame.src = item.frame.getAttribute('data-src');
-        pendingFrames.splice(i, 1);
+      if (!showcaseTouch) {
+        slide.querySelector('.showcase-shield').addEventListener('click', function () {
+          slide.classList.add('is-interactive');
+        });
+        // Re-arm the shield on the way out so the next scroll past the
+        // preview isn't swallowed by the frame.
+        slide.addEventListener('mouseleave', function () {
+          slide.classList.remove('is-interactive');
+        });
       }
     }
+
+    showcaseViewport.appendChild(slide);
+    showcaseSlides.push({ slide: slide, frame: frame, project: project });
   }
 
-  function updateProjects() {
-    if (window.innerWidth <= 560 || !projectCards.length) return;
+  function buildIndexItem(project, i, list) {
+    var li = document.createElement('li');
+    var btn = document.createElement('button');
 
-    var y = scrollY();
+    btn.type = 'button';
+    btn.className = 'showcase-item';
+    btn.id = 'showcase-tab-' + i;
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-controls', 'showcase-slide-' + i);
+    btn.innerHTML =
+      '<span class="showcase-num">' + project.num + '</span>' +
+      '<span class="showcase-copy">' +
+      '<span class="showcase-category">' + project.category + '</span>' +
+      '<span class="showcase-name">' + project.name + '</span>' +
+      '</span>';
 
-    // How far each card has travelled from its own resting spot toward the
-    // next one's — 0 while it's the front card, 1 once it's fully covered.
-    projectCards.forEach(function (item, i) {
-      var next = projectCards[i + 1];
-      item.progress = next ? clamp((y - item.snapY) / (next.snapY - item.snapY), 0, 1) : 0;
+    btn.addEventListener('click', function () {
+      setProject(i, true);
     });
 
-    // A card shrinks a notch for every card that has come to rest on top of
-    // it, so the stack reads as depth rather than a flat pile.
-    projectCards.forEach(function (item, i) {
-      var covered = 0;
-      for (var j = i; j < projectCards.length - 1; j++) {
-        covered += projectCards[j].progress;
-      }
-      item.card.style.transform = 'scale(' + (1 - Math.min(covered, 4) * 0.02) + ')';
+    // Hovering the index previews the demo, so browsing costs no clicks.
+    if (!showcaseTouch) {
+      btn.addEventListener('mouseenter', function () {
+        setProject(i, false);
+      });
+    }
+
+    btn.addEventListener('keydown', function (e) {
+      var step = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1
+        : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      var next = (i + step + showcaseItems.length) % showcaseItems.length;
+      setProject(next, true);
     });
+
+    li.appendChild(btn);
+    list.appendChild(li);
+    showcaseItems.push(btn);
   }
 
-  /* ==========================================================
-     STICKY TOP OFFSET (matches CSS breakpoints)
-     ========================================================== */
+  /* Selecting a demo swaps the panel, the address pill and the live link —
+     and only then fetches that site, so six embeds never race the page load.
+     `focus` stays false for hover and the initial pick. */
+  function setProject(i, focus) {
+    if (i === showcaseActive || !showcaseSlides[i]) return;
 
-  function updateStickyTop() {
-    var top = window.innerHeight < 760 ? '3.5rem' : window.innerWidth >= 768 ? '4.5rem' : '4rem';
-    document.documentElement.style.setProperty('--sticky-top', top);
+    var previous = showcaseSlides[showcaseActive];
+    if (previous) {
+      previous.slide.classList.remove('is-active', 'is-interactive');
+    }
+
+    showcaseActive = i;
+
+    var current = showcaseSlides[i];
+    current.slide.classList.add('is-active');
+    loadFrame(current);
+    // The next demo is the most likely click, so it warms up in the gap.
+    loadFrame(showcaseSlides[i + 1]);
+
+    showcaseItems.forEach(function (btn, n) {
+      var active = n === i;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      btn.tabIndex = active ? 0 : -1;
+    });
+
+    var project = current.project;
+    showcaseOpen.textContent = project.placeholder ? 'Get started' : 'Open live';
+    showcaseOpen.href = project.placeholder
+      ? 'mailto:AragveliPalazzolo@gmail.com'
+      : project.url;
+
+    if (focus) showcaseItems[i].focus();
   }
+
+  function loadFrame(item) {
+    if (!item || !item.frame || item.frame.src) return;
+    item.frame.src = item.frame.getAttribute('data-src');
+  }
+
 
   /* ==========================================================
      SCROLL LOOP
@@ -878,20 +769,11 @@
   var smoothScroll = null;
 
   function onScroll() {
-    var y = scrollY();
-    if (y !== lastY) {
-      scrollDir = y > lastY ? 1 : -1;
-      lastY = y;
-    }
-    queueSnap();
-
     if (ticking) return;
     ticking = true;
     window.requestAnimationFrame(function () {
       updateMarquee();
       updateAnimatedText();
-      updateProjects();
-      loadNearbyFrames();
       ticking = false;
     });
   }
@@ -901,7 +783,6 @@
      ========================================================== */
 
   function init() {
-    updateStickyTop();
     initFadeIn();
     initMagnets();
     initLiquidGlass();
@@ -915,8 +796,6 @@
     window.addEventListener(
       'resize',
       function () {
-        updateStickyTop();
-        layoutProjects();
         measureMarquee();
         onScroll();
       },
@@ -925,7 +804,6 @@
 
     // Re-measure once the lazy marquee images have settled.
     window.addEventListener('load', function () {
-      layoutProjects();
       measureMarquee();
       onScroll();
     });
