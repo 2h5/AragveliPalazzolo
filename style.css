@@ -106,8 +106,6 @@ html.lenis body {
 
 /* ---------- Liquid glass ---------- */
 .liquid-glass {
-  --glass-x: 50%;
-  --glass-y: 0%;
   isolation: isolate;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.055) 46%, rgba(0, 0, 0, 0.08) 100%),
@@ -123,35 +121,6 @@ html.lenis body {
     inset 0 -1px 0 rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
-}
-
-.liquid-glass::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: -1px;
-  border-radius: inherit;
-  background:
-    radial-gradient(
-      circle at var(--glass-x) var(--glass-y),
-      rgba(255, 255, 255, 0.44) 0%,
-      rgba(255, 255, 255, 0.16) 18%,
-      transparent 42%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      transparent 42%,
-      rgba(255, 255, 255, 0.045) 100%
-    );
-  opacity: 0;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  transition: opacity 220ms ease;
-}
-
-.liquid-glass.glass-pointer-active::before {
-  opacity: 0.72;
 }
 
 .liquid-glass::after {
@@ -180,7 +149,7 @@ html.lenis body {
   max-width: calc(100% - 3rem);
 }
 
-.navbar > * {
+.navbar > :not(.navbar-selection) {
   position: relative;
   z-index: 1;
 }
@@ -197,25 +166,80 @@ html.lenis body {
   top: 0;
   width: var(--selection-w);
   height: var(--selection-h);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 9999px;
   opacity: 0;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)),
-    rgba(255, 255, 255, 0.018);
-  backdrop-filter: blur(8px) saturate(160%) brightness(1.08);
-  -webkit-backdrop-filter: blur(8px) saturate(160%) brightness(1.08);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.012) 55%, rgba(255, 255, 255, 0.025)),
+    rgba(8, 12, 15, 0.06);
+  backdrop-filter: blur(10px) saturate(165%) brightness(1.03);
+  -webkit-backdrop-filter: blur(10px) saturate(165%) brightness(1.03);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.3),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.045);
+    0 7px 20px rgba(0, 0, 0, 0.14),
+    0 2px 6px rgba(0, 0, 0, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025);
   transform: translate3d(var(--selection-x), var(--selection-y), 0);
   transition:
-    opacity 150ms ease,
-    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    width 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    height 420ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, width, opacity;
+    opacity 170ms ease,
+    transform 460ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 460ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 460ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 260ms ease;
+  will-change: transform, width, height, opacity;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.navbar > .navbar-selection {
+  position: absolute;
+  z-index: 0;
+}
+
+.navbar-selection::before,
+.navbar-selection::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
   pointer-events: none;
+}
+
+.navbar-selection::before {
+  background: linear-gradient(105deg, transparent 28%, rgba(255, 255, 255, 0.075) 49%, transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0.28;
+}
+
+.navbar-selection::after {
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.045),
+    inset 7px 0 12px rgba(255, 255, 255, 0.018),
+    inset -7px 0 12px rgba(0, 0, 0, 0.04);
+}
+
+.navbar-selection.is-seeding {
+  transition: none;
+}
+
+.navbar-selection.is-introducing::before {
+  animation: navbar-bubble-bloom 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes navbar-bubble-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.46);
+  }
+  48% {
+    opacity: 0.42;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0.28;
+    transform: scale(1);
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -286,12 +310,12 @@ html.lenis body {
 
 .navbar a:hover {
   color: #ffffff;
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.38);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.32);
 }
 
 .navbar a.is-bubble-active {
   color: #ffffff;
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.38);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.32);
 }
 
 .hero-heading-wrap {
@@ -1272,6 +1296,10 @@ h1.hero-heading {
 
   .navbar-selection {
     transition: opacity 120ms ease !important;
+  }
+
+  .navbar-selection::before {
+    animation: none !important;
   }
 
   .service-typewriter-field.is-typing .service-typewriter-output::after {

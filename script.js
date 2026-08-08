@@ -81,8 +81,8 @@
       num: '06',
       name: 'Café & Wine Bar Concept',
       category: 'Local cafe & wine bar demo',
-      url: 'https://aromati-cafe-demo.pages.dev/',
-      domain: 'aromati-cafe-demo.pages.dev'
+      url: 'https://aromati-cafe.pages.dev/',
+      domain: 'aromati-cafe.pages.dev'
     }
   ];
 
@@ -181,56 +181,6 @@
   }
 
   /* ==========================================================
-     LIQUID GLASS — move the material highlight with the pointer
-     ========================================================== */
-
-  function initLiquidGlass() {
-    if (reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-    var glasses = document.querySelectorAll('.liquid-glass');
-
-    Array.prototype.forEach.call(glasses, function (glass) {
-      var resetTimer = null;
-
-      function moveHighlight(e) {
-        var rect = glass.getBoundingClientRect();
-        var x = ((e.clientX - rect.left) / rect.width) * 100;
-        var y = ((e.clientY - rect.top) / rect.height) * 100;
-
-        glass.style.setProperty('--glass-x', x.toFixed(2) + '%');
-        glass.style.setProperty('--glass-y', y.toFixed(2) + '%');
-      }
-
-      glass.addEventListener(
-        'pointerenter',
-        function (e) {
-          if (resetTimer) clearTimeout(resetTimer);
-          moveHighlight(e);
-          glass.classList.add('glass-pointer-active');
-        },
-        { passive: true }
-      );
-
-      glass.addEventListener(
-        'pointermove',
-        function (e) {
-          moveHighlight(e);
-        },
-        { passive: true }
-      );
-
-      glass.addEventListener('pointerleave', function () {
-        glass.classList.remove('glass-pointer-active');
-        resetTimer = setTimeout(function () {
-          glass.style.setProperty('--glass-x', '50%');
-          glass.style.setProperty('--glass-y', '0%');
-          resetTimer = null;
-        }, 240);
-      });
-    });
-  }
-
-  /* ==========================================================
      NAV BUBBLE — spring between the navigation choices
      ========================================================== */
 
@@ -243,28 +193,78 @@
     var bubble = nav.querySelector('.navbar-selection');
     var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
     var activeLink = null;
+    var introFrame = null;
+    var introTimer = null;
     if (!bubble || !links.length) return;
 
-    function selectLink(link) {
+    bubble.addEventListener('click', function () {
+      if (activeLink) activeLink.click();
+    });
+
+    function measureLink(link) {
       var navRect = nav.getBoundingClientRect();
       var linkRect = link.getBoundingClientRect();
-      var padX = 18;
-      var height = Math.min(navRect.height - 6, linkRect.height + 18);
+      var padX = 24;
+      var height = navRect.height - 6;
       var width = linkRect.width + padX * 2;
       var x = linkRect.left - navRect.left - padX;
       var y = (navRect.height - height) / 2;
 
+      return { x: x, y: y, width: width, height: height };
+    }
+
+    function writeBubble(metrics) {
+      bubble.style.setProperty('--selection-x', metrics.x.toFixed(2) + 'px');
+      bubble.style.setProperty('--selection-y', metrics.y.toFixed(2) + 'px');
+      bubble.style.setProperty('--selection-w', metrics.width.toFixed(2) + 'px');
+      bubble.style.setProperty('--selection-h', metrics.height.toFixed(2) + 'px');
+    }
+
+    function activateLink(link) {
       if (activeLink !== link) {
         links.forEach(function (item) {
           item.classList.toggle('is-bubble-active', item === link);
         });
         activeLink = link;
       }
+    }
 
-      bubble.style.setProperty('--selection-x', x.toFixed(2) + 'px');
-      bubble.style.setProperty('--selection-y', y.toFixed(2) + 'px');
-      bubble.style.setProperty('--selection-w', width.toFixed(2) + 'px');
-      bubble.style.setProperty('--selection-h', height.toFixed(2) + 'px');
+    function selectLink(link) {
+      activateLink(link);
+      writeBubble(measureLink(link));
+    }
+
+    function introduceLink(link) {
+      var target = measureLink(link);
+      var seedSize = Math.min(22, target.height);
+      var seed = {
+        x: target.x + (target.width - seedSize) / 2,
+        y: target.y + (target.height - seedSize) / 2,
+        width: seedSize,
+        height: seedSize
+      };
+
+      if (introFrame) cancelAnimationFrame(introFrame);
+      if (introTimer) clearTimeout(introTimer);
+
+      activateLink(link);
+      bubble.classList.remove('is-introducing');
+      bubble.classList.add('is-seeding');
+      writeBubble(seed);
+      bubble.offsetWidth;
+      bubble.classList.remove('is-seeding');
+      bubble.classList.add('is-introducing');
+      nav.classList.add('has-selection');
+
+      introFrame = requestAnimationFrame(function () {
+        writeBubble(target);
+        introFrame = null;
+      });
+
+      introTimer = setTimeout(function () {
+        bubble.classList.remove('is-introducing');
+        introTimer = null;
+      }, 620);
     }
 
     function selectNearest(pointerX) {
@@ -285,6 +285,15 @@
     }
 
     function hideBubble() {
+      if (introFrame) {
+        cancelAnimationFrame(introFrame);
+        introFrame = null;
+      }
+      if (introTimer) {
+        clearTimeout(introTimer);
+        introTimer = null;
+      }
+      bubble.classList.remove('is-introducing', 'is-seeding');
       nav.classList.remove('has-selection');
       links.forEach(function (link) {
         link.classList.remove('is-bubble-active');
@@ -296,8 +305,24 @@
       'pointerenter',
       function (e) {
         if (e.pointerType === 'touch') return;
-        selectNearest(e.clientX);
-        nav.classList.add('has-selection');
+        var nearest = links[0];
+        var nearestDistance = Infinity;
+
+        links.forEach(function (link) {
+          var rect = link.getBoundingClientRect();
+          var distance = Math.abs(e.clientX - (rect.left + rect.width / 2));
+          if (distance < nearestDistance) {
+            nearest = link;
+            nearestDistance = distance;
+          }
+        });
+
+        if (reduceMotion) {
+          selectLink(nearest);
+          nav.classList.add('has-selection');
+        } else {
+          introduceLink(nearest);
+        }
       },
       { passive: true }
     );
@@ -306,6 +331,7 @@
       'pointermove',
       function (e) {
         if (e.pointerType === 'touch') return;
+        if (introFrame) return;
         selectNearest(e.clientX);
       },
       { passive: true }
@@ -785,7 +811,6 @@
   function init() {
     initFadeIn();
     initMagnets();
-    initLiquidGlass();
     initNavBubble();
     initServiceTypewriter();
     initMarquee();
