@@ -81,8 +81,8 @@
       num: '06',
       name: 'Café & Wine Bar Concept',
       category: 'Local cafe & wine bar demo',
-      url: 'https://aromati-cafe.pages.dev/',
-      domain: 'aromati-cafe.pages.dev'
+      url: 'https://aromaticafe.pages.dev/',
+      domain: 'aromaticafe.pages.dev'
     }
   ];
 
