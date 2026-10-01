@@ -5,139 +5,209 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AragveliPalazzolo — Web Design</title>
 <meta name="description" content="AragveliPalazzolo — two college grads building affordable websites for local shops and businesses." />
+<meta name="theme-color" content="#0A0908" />
 <link rel="icon" type="image/png" href="favicon.png" />
 <link rel="apple-touch-icon" href="favicon.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" as="style" />
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-<noscript><link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;900&display=swap" rel="stylesheet" /></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="style.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
 </head>
-<body>
+<body class="is-loading">
+
+<!-- ============ PRELOADER ============ -->
+<div class="loader" aria-hidden="true">
+  <div class="loader-inner">
+    <img class="loader-mark" src="logo-mark-gold.png" alt="" />
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-count"><span data-loader-count>0</span>%</div>
+  </div>
+</div>
+
+<!-- ============ 3D STAGE ============ -->
+<canvas class="gl" aria-hidden="true"></canvas>
+<div class="gl-fallback" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="cursor" aria-hidden="true"><span class="cursor-dot"></span><span class="cursor-ring"></span></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <a class="nav-brand" href="#top" aria-label="AragveliPalazzolo — home">
+    <img src="logo-mark-gold.png" alt="" />
+    <span>Aragveli<em>Palazzolo</em></span>
+  </a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#projects">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="btn btn-gold nav-cta" href="mailto:AragveliPalazzolo@gmail.com" data-magnet data-strength="6">
+    <span>Start a project</span>
+  </a>
+</header>
 
 <main class="page">
 
   <!-- ============ 1. HERO ============ -->
   <section class="hero" id="top">
-
-    <video class="hero-video" autoplay loop muted playsinline
-      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_105406_16f4600d-7a92-4292-b96e-b19156c7830a.mp4"></video>
-    <div class="hero-video-overlay"></div>
-
-    <nav class="navbar liquid-glass" data-fade data-delay="0" data-y="-20">
-      <span class="navbar-selection" aria-hidden="true"></span>
-      <img class="navbar-logo" src="logo-mark-gold.png" alt="AragveliPalazzolo" />
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#projects">Projects</a>
-    </nav>
-
-    <div class="hero-heading-wrap" data-fade data-delay="0.15" data-y="40">
-      <h1 class="hero-heading">
-        <span class="hero-heading-line">Look pro.</span>
-        <span class="hero-heading-line hero-heading-shiny">Pay less.</span>
-      </h1>
+    <div class="hero-meta" data-intro>
+      <span class="eyebrow"><i class="dot"></i>Web design studio &mdash; New York</span>
+      <span class="eyebrow hero-meta-right">Est. by two college grads</span>
     </div>
 
-    <div class="hero-bottom">
-      <p class="hero-tagline" data-fade data-delay="0.35" data-y="20">
-        two college grads building affordable websites for local shops and businesses
+    <h1 class="hero-title" aria-label="Look pro. Pay less.">
+      <span class="hero-line" data-split-chars>Look pro.</span>
+      <span class="hero-line hero-line-gold" data-split-chars>Pay less.</span>
+    </h1>
+
+    <div class="hero-foot">
+      <p class="hero-tagline" data-intro>
+        Two college grads building affordable, beautifully crafted websites for local shops and businesses.
       </p>
-      <div class="contact-info" data-fade data-delay="0.5" data-y="20">
-        <span class="contact-info-name">Dachi Aragveli</span>
-        <a class="contact-info-item" href="tel:+13478379427">347-837-9427</a>
-        <a class="contact-info-item" href="mailto:AragveliPalazzolo@gmail.com">AragveliPalazzolo@gmail.com</a>
+
+      <div class="hero-actions" data-intro>
+        <a class="btn btn-gold" href="#projects" data-magnet data-strength="5"><span>See the work</span><i class="btn-arrow">&rarr;</i></a>
+        <a class="btn btn-ghost" href="#contact" data-magnet data-strength="5"><span>Get in touch</span></a>
       </div>
     </div>
 
+    <div class="hero-scroll" data-intro aria-hidden="true">
+      <span>Scroll</span>
+      <i></i>
+    </div>
   </section>
 
-  <!-- ============ 2. MARQUEE ============ -->
-  <section class="marquee" id="marquee">
-    <div class="marquee-row" data-marquee-row="1"><div class="marquee-track"></div></div>
-    <div class="marquee-row" data-marquee-row="2"><div class="marquee-track"></div></div>
+  <!-- ============ 2. 3D GALLERY ============ -->
+  <section class="gallery" aria-hidden="true">
+    <div class="gallery-stage">
+      <div class="gallery-plane">
+        <div class="gallery-row" data-marquee-row="1"><div class="marquee-track"></div></div>
+        <div class="gallery-row" data-marquee-row="2"><div class="marquee-track"></div></div>
+        <div class="gallery-row" data-marquee-row="3"><div class="marquee-track"></div></div>
+      </div>
+    </div>
   </section>
 
   <!-- ============ 3. ABOUT ============ -->
   <section class="about" id="about">
+    <div class="section-label" data-reveal><span>(01)</span>About us</div>
 
-    <img class="deco deco-tl"
-      data-fade data-delay="0.1" data-x="-80" data-y="0" data-duration="0.9"
-      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
-      alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <img class="deco deco-bl"
-      data-fade data-delay="0.25" data-x="-80" data-y="0" data-duration="0.9"
-      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
-      alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <img class="deco deco-tr"
-      data-fade data-delay="0.15" data-x="80" data-y="0" data-duration="0.9"
-      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
-      alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <img class="deco deco-br"
-      data-fade data-delay="0.3" data-x="80" data-y="0" data-duration="0.9"
-      src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
-      alt="" aria-hidden="true" loading="lazy" decoding="async" />
+    <p class="about-statement" data-animated-text>We&rsquo;re two college grads who taught ourselves web design so local shops and small businesses could get sites that actually look good, without agency prices.</p>
 
-    <div class="about-inner">
-      <h2 class="hero-heading about-heading" data-fade data-delay="0" data-y="40">About us</h2>
+    <div class="about-grid">
+      <p class="about-body" data-reveal>
+        We handle the design and the build, so you can just tell us what you need and get back to running your business.
+      </p>
 
-      <p class="about-text" data-animated-text>We&rsquo;re two college grads who taught ourselves web design so local shops and small businesses could get sites that actually look good, without agency prices. We handle the design and the build, so you can just tell us what you need and get back to running your business.</p>
+      <ul class="about-pillars" data-reveal>
+        <li><span>Design</span><em>Built around you</em></li>
+        <li><span>Build</span><em>From scratch</em></li>
+        <li><span>Support</span><em>Whenever you need</em></li>
+      </ul>
     </div>
-
-    <div class="contact-info" data-fade data-delay="0.2" data-y="20">
-      <span class="contact-info-name">Dachi Aragveli</span>
-      <a class="contact-info-item" href="tel:+13478379427">347-837-9427</a>
-      <a class="contact-info-item" href="mailto:AragveliPalazzolo@gmail.com">AragveliPalazzolo@gmail.com</a>
-    </div>
-
   </section>
 
   <!-- ============ 4. SERVICES ============ -->
   <section class="services" id="services">
-    <h2 class="services-heading">Services</h2>
+    <div class="services-head">
+      <div class="section-label" data-reveal><span>(02)</span>Services</div>
+      <h2 class="display" data-split-words>Everything your business needs <em>online.</em></h2>
+    </div>
 
-    <div class="services-list" data-service-typewriter>
-
-      <div class="service-item">
-        <div class="service-body">
-          <h3 class="service-name">Website Design</h3>
-          <p class="service-desc">Clean, modern designs built around your business and your customers, not a generic template.</p>
+    <div class="services-stage">
+      <article class="card" data-tilt>
+        <div class="card-glow"></div>
+        <div class="card-top">
+          <span class="card-num">01</span>
+          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="9" width="36" height="28" rx="3"/><path d="M6 16h36M14 43h20M24 37v6"/></svg>
         </div>
-      </div>
+        <h3 class="card-title">Website Design</h3>
+        <p class="card-text">Clean, modern designs built around your business and your customers, not a generic template.</p>
+      </article>
 
-      <div class="service-item">
-        <div class="service-body">
-          <h3 class="service-name">Website Development</h3>
-          <p class="service-desc">Fast, mobile-friendly sites built from scratch and ready to go live.</p>
+      <article class="card" data-tilt>
+        <div class="card-glow"></div>
+        <div class="card-top">
+          <span class="card-num">02</span>
+          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M17 14 7 24l10 10M31 14l10 10-10 10M27 9l-6 30"/></svg>
         </div>
-      </div>
+        <h3 class="card-title">Website Development</h3>
+        <p class="card-text">Fast, mobile-friendly sites built from scratch and ready to go live.</p>
+      </article>
 
-      <div class="service-item">
-        <div class="service-body">
-          <h3 class="service-name">Ongoing Support</h3>
-          <p class="service-desc">Updates and changes whenever you need them, without the extra hassle.</p>
+      <article class="card" data-tilt>
+        <div class="card-glow"></div>
+        <div class="card-top">
+          <span class="card-num">03</span>
+          <svg class="card-icon" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16"/><path d="M24 14v10l7 5"/></svg>
         </div>
-      </div>
-
+        <h3 class="card-title">Ongoing Support</h3>
+        <p class="card-text">Updates and changes whenever you need them, without the extra hassle.</p>
+      </article>
     </div>
   </section>
 
   <!-- ============ 5. PROJECTS ============ -->
   <section class="projects" id="projects">
-    <h2 class="hero-heading projects-heading" data-fade data-delay="0" data-y="40">Demo Concepts</h2>
-    <p class="projects-lead" data-fade data-delay="0.1" data-y="20">
-      Every concept below is a real, working site. Pick one to preview it here.
-    </p>
-    <div class="showcase" data-fade data-delay="0.15" data-y="40"></div>
+    <div class="projects-head">
+      <div class="section-label" data-reveal><span>(03)</span>Demo concepts</div>
+      <h2 class="display" data-split-words>Real sites. <em>Live now.</em></h2>
+      <p class="projects-lead" data-reveal>
+        Every concept below is a real, working site. Pick one to preview it here.
+      </p>
+    </div>
+    <div class="showcase"></div>
+  </section>
+
+  <!-- ============ 6. CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="section-label" data-reveal><span>(04)</span>Contact</div>
+    <h2 class="contact-title" data-split-words>Ready to <em>look pro?</em></h2>
+
+    <a class="contact-mail" href="mailto:AragveliPalazzolo@gmail.com" data-reveal>
+      AragveliPalazzolo@gmail.com
+      <i class="btn-arrow">&nearr;</i>
+    </a>
+
+    <div class="contact-row" data-reveal>
+      <div>
+        <span class="eyebrow">Talk to</span>
+        <strong>Dachi Aragveli</strong>
+      </div>
+      <div>
+        <span class="eyebrow">Call</span>
+        <a href="tel:+13478379427">347-837-9427</a>
+      </div>
+      <div>
+        <span class="eyebrow">Write</span>
+        <a href="mailto:AragveliPalazzolo@gmail.com">AragveliPalazzolo@gmail.com</a>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <span>&copy; <span data-year></span> AragveliPalazzolo</span>
+      <a href="#top" class="footer-top">Back to top &uarr;</a>
+    </footer>
   </section>
 
 </main>
 
 <script src="lenis.min.js" defer></script>
 <script src="script.js" defer></script>
+<script type="module" src="scene.js"></script>
 <script data-goatcounter="https://ardithiyar.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 </body>
